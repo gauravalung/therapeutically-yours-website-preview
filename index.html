@@ -1,1647 +1,886 @@
-<!DOCTYPE html><html lang="en"><head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Therapeutically Yours Preview</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400&amp;family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&amp;family=Great+Vibes&amp;display=swap"/>
-    <style>/* Hark's design tokens and component styles. Each component's rules follow its @component comment. style-gates: data */
-
-/* @component foundations */
-:root {
-  color-scheme: light dark;
-
-  --text-primary: light-dark(#1d1d1f, #f5f5f7);         /* body text */
-  --text-secondary: light-dark(#636366, #a1a1a6);       /* supporting grey text */
-  --text-tertiary: light-dark(#1d1d1f4d, #f5f5f74d);    /* hollow dots, faint marks; never body text */
-  --text-primary-on: light-dark(#f5f5f7, #1d1d1f);      /* text on --fill-primary */
-  --text-secondary-on: light-dark(#aeaeb2, #5c5c60);    /* grey text on --fill-primary */
-  --fill-primary: light-dark(#1d1d1f, #f5f5f7);         /* the strong fill: solid chips, the nav, the badge */
-  --fill-primary-on: light-dark(#f5f5f7, #1d1d1f);      /* the page background */
-  --fill-secondary: light-dark(#1d1d1f80, #f5f5f780);
-  --fill-tertiary: light-dark(#e8e8ea, #2a2a2d);        /* the grey card, panel and row tint */
-  --fill-segment: light-dark(#3a3a3c, #e2e2e4);         /* the nav's tab track */
-  --fill-system-green: #00a665;                         /* status: done, ready */
-  --fill-system-orange: #ff4d00;                        /* status: now, current */
-  --fill-system-red: light-dark(#da2f35, #f1555b);      /* status: blocked, error */
-  --transparent-primary: light-dark(#1d1d1f4d, #f5f5f74d);
-  --stroke-primary: light-dark(#1d1d1f24, #f5f5f724);   /* strong hairline */
-  --stroke-secondary: light-dark(#1d1d1f12, #f5f5f712); /* faint hairline between rows */
-  --stroke-primary-on: light-dark(#f5f5f71a, #1d1d1f1a);
-  --stroke-composer: light-dark(#f5f5f780, #1d1d1f80);  /* the callout's glass edge */
-  --stroke-system-orange: #ff4d0026;
-  --hover-wash: light-dark(#1d1d1f0d, #f5f5f70d);
-  --hover-wash-primary-on: light-dark(#f9f9fa26, #1d1d1f14);
-
-  /* The hero is light text over a dark photo in both themes. */
-  --hero-surface: #161f39;
-  --hero-text: #f5f5f7;
-  --hero-text-muted: #f5f5f7cc;
-  --hero-scrim-strong: rgb(22 31 57 / 0.78);
-  --hero-scrim-soft: rgb(22 31 57 / 0.3);
-  --hero-scrim-side: rgb(22 31 57 / 0.45);
-  --hero-glass: rgb(22 31 57 / 0.42);
-  --hero-glass-faint: rgb(22 31 57 / 0.35);
-  --hero-glass-stroke: rgb(245 245 247 / 0.28);
-
-  --mat-regular: light-dark(rgb(255 255 255 / 0.56), rgb(29 29 31 / 0.55));
-  --mat-thin: light-dark(rgb(255 255 255 / 0.22), rgb(29 29 31 / 0.4));
-  --mat-agent: light-dark(rgb(255 255 255 / 0.84), rgb(29 29 31 / 0.66));
-  --mat-inverse: color-mix(in srgb, var(--fill-primary) 86%, transparent);  /* the nav: dark on light, light on dark */
-  --hark-blur: blur(50px) saturate(1.6);
-  --hark-shadow: 0 8px 40px #1d1d1f1f;
-
-  --sans: "GT Standard", "GT Standard L", "Geist", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
-  --lh: 1.3;                                            /* every text style is 130% */
-  --weight-light: 300;
-  --weight-regular: 400;
-  --weight-medium: 500;
-  --weight-bold: 600;
-  --size-caption: 12px;                                 /* the smallest text allowed */
-  --size-meta: 13px;
-  --size-small: 14px;
-  --size-body: 15px;
-  --size-prose: 16px;
-  --size-heading: 20px;
-  --size-figure: clamp(24px, 3vw, 32px);
-  --size-title: clamp(26px, 3vw, 32px);
-  --size-display: clamp(34px, 5vw, 48px);
-  --size-lede: clamp(16px, 1.7vw, 20px);
-
-  --type-caption: var(--weight-regular) var(--size-caption)/var(--lh) var(--sans);
-  --type-tag: var(--weight-medium) var(--size-caption)/var(--lh) var(--sans);
-  --type-small: var(--weight-regular) var(--size-small)/var(--lh) var(--sans);
-  --type-label: var(--weight-medium) var(--size-small)/var(--lh) var(--sans);
-  --type-body: var(--weight-regular) var(--size-body)/var(--lh) var(--sans);
-  --type-body-strong: var(--weight-medium) var(--size-body)/var(--lh) var(--sans);
-  --type-heading: var(--weight-medium) var(--size-heading)/var(--lh) var(--sans);
-  --type-lede: var(--weight-medium) var(--size-lede)/var(--lh) var(--sans);
-  --type-figure: var(--weight-regular) var(--size-figure)/var(--lh) var(--sans);
-  --type-title: var(--weight-regular) var(--size-title)/var(--lh) var(--sans);
-  --type-display: var(--weight-medium) var(--size-display)/var(--lh) var(--sans);
-  --type-numeral: var(--weight-regular) 48px/1 var(--sans);
-
-  --r-s: 12px;
-  --r-m: 16px;
-  --r-l: 24px;
-  --r-xl: 32px;
-  --r-pill: 100px;
-
-  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-  --dur-quick: 160ms;
-  --dur-draw: 1400ms;
-
-  --page-max: 1120px;
-  --gutter: clamp(16px, 3vw, 32px);                     /* the page's side padding */
-  --tap: 44px;                                          /* the smallest touch target */
-}
-:root[data-theme="light"] { color-scheme: light; }
-:root[data-theme="dark"] { color-scheme: dark; }
-
-* { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-
-body {
-  margin: 0;
-  background: var(--fill-primary-on);
-  color: var(--text-primary);
-  font: var(--type-body);
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-
-img { max-width: 100%; display: block; }
-figure { margin-inline: 0; }
-a { color: inherit; }
-b, strong { font-weight: var(--weight-bold); }
-p { margin: 0; text-wrap: pretty; }
-h1, h2, h3 { margin: 0; text-wrap: balance; }
-small { font-size: max(var(--size-caption), 0.85em); }
-.sub { color: var(--text-secondary); }
-
-:focus-visible { outline: 2px solid var(--fill-primary); outline-offset: 3px; border-radius: 6px; }
-
-/* @component page */
-.page {
-  max-width: var(--page-max);
-  margin: 0 auto;
-  padding-inline: var(--gutter);
-  padding-block: 12px 40px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 16px;
-}
-.main { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; min-width: 0; }
-
-.glass {
-  background: var(--mat-inverse);
-  -webkit-backdrop-filter: var(--hark-blur);
-  backdrop-filter: var(--hark-blur);
-  border: 1px solid var(--stroke-primary-on);
-}
-.nav {
-  position: sticky;
-  top: calc(env(safe-area-inset-top, 0px) + 12px);
-  z-index: 20;
-  justify-self: center;
-  max-width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px;
-  border-radius: var(--r-pill);
-  box-shadow: var(--hark-shadow);
-}
-.nav :focus-visible { outline-color: var(--fill-primary-on); }
-.seg {
-  display: flex;
-  min-width: 0;
-  overflow-x: auto;
-  scrollbar-width: none;
-  border-radius: var(--r-pill);
-  background: var(--fill-segment);
-}
-.seg::-webkit-scrollbar { display: none; }
-.seg a {
-  flex: none;
-  padding: 8px 14px;
-  border-radius: var(--r-pill);
-  font: var(--type-label);
-  color: var(--text-secondary-on);
-  text-decoration: none;
-  white-space: nowrap;
-}
-.seg a:hover { color: var(--text-primary-on); }
-/* The active tab carries its own fill so its text is measured against it. */
-.seg a[aria-current="true"] { background: var(--fill-primary-on); color: var(--text-primary); }
-.theme-btn {
-  flex: none;
-  width: 36px; height: 36px;
-  display: grid;
-  place-items: center;
-  border: 0;
-  border-radius: 50%;
-  background: var(--hover-wash-primary-on);
-  color: var(--text-primary-on);
-  cursor: pointer;
-}
-.theme-btn:hover { box-shadow: inset 0 0 0 100px var(--hover-wash-primary-on); }
-.theme-btn::before { content: ""; width: 14px; height: 14px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px currentColor; background: linear-gradient(to right, light-dark(currentColor, transparent) 50%, light-dark(transparent, currentColor) 50%); }
-@media (max-width: 599px) {
-  .seg a { display: flex; align-items: center; min-height: var(--tap); }
-  .theme-btn { width: var(--tap); height: var(--tap); }
-}
-
-/* @component footer */
-.foot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px 24px;
-  padding-top: 24px;
-  border-top: 1px solid var(--stroke-secondary);
-  font-size: var(--size-small);
-  color: var(--text-secondary);
-}
-.foot strong { color: var(--text-primary); }
-.foot nav { display: flex; flex-wrap: wrap; gap: 6px; }
-.foot nav a {
-  padding: 6px 12px;
-  border-radius: var(--r-pill);
-  background: var(--fill-tertiary);
-  color: var(--text-primary);
-  font: var(--type-tag);
-  text-decoration: none;
-}
-.foot nav a:hover { box-shadow: inset 0 0 0 100px var(--hover-wash); }
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  border-radius: var(--r-xl);
-  background: var(--fill-primary);
-  color: var(--text-primary-on);
-  box-shadow: var(--hark-shadow);
-  font: var(--weight-medium) var(--size-body)/1.1 var(--sans);
-  text-decoration: none;
-}
-.badge:hover { box-shadow: var(--hark-shadow), inset 0 0 0 100px var(--hover-wash-primary-on); }
-.hark-mark { display: inline-grid; place-items: center; }
-.hark-mark svg { display: block; }
-@media (max-width: 599px) {
-  .foot nav a { display: inline-flex; align-items: center; min-height: var(--tap); min-width: var(--tap); }
-  .badge { min-height: var(--tap); }
-}
-
-/* @component chip */
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px 4px 8px;
-  border-radius: var(--r-pill);
-  font: var(--type-tag);
-  max-width: 100%;
-  background: var(--fill-tertiary);
-  color: var(--text-secondary);
-  vertical-align: middle;
-}
-.chip::before {
-  content: "";
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  flex: none;
-  box-shadow: inset 0 0 0 1.5px var(--text-tertiary);
-}
-.chip--solid { background: var(--fill-primary); color: var(--text-primary-on); }
-.chip--solid::before { background: var(--fill-system-green); box-shadow: none; }
-td .chip { white-space: nowrap; }
-/* @component dot */
-.dot {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 4px;
-  font: var(--type-tag);
-  color: var(--text-primary);
-}
-.dot::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--fill-system-green); }
-tbody th .dot { display: flex; width: fit-content; }
-/* @component pill */
-.pill {
-  display: inline-block;
-  padding: 1px 8px;
-  border-radius: var(--r-pill);
-  background: var(--fill-tertiary);
-  color: var(--text-secondary);
-  font: var(--type-tag);
-  white-space: normal;
-  vertical-align: 1px;
-}
-/* @component button, link and links */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 30px;
-  padding: 5px 12px;
-  border-radius: var(--r-s);
-  background: var(--fill-primary-on);
-  color: var(--text-primary);
-  border: 1px solid var(--stroke-primary);
-  font: var(--type-tag);
-  text-decoration: none;
-  max-width: 100%;
-  transition: box-shadow var(--dur-quick) ease;
-}
-.btn:hover { box-shadow: inset 0 0 0 100px var(--hover-wash); }
-.btn[target="_blank"]::after { content: "\2197"; font-size: 11px; color: var(--text-secondary); }
-.link {
-  color: var(--text-primary);
-  text-decoration: underline;
-  text-decoration-color: var(--stroke-primary);
-  text-underline-offset: 3px;
-  max-width: 100%;
-  overflow-wrap: anywhere;
-}
-.link:hover { text-decoration-color: currentColor; }
-.links { display: flex; flex-wrap: wrap; gap: 8px; }
-@media (pointer: coarse), (max-width: 599px) { .btn { min-height: var(--tap); padding-inline: 14px; } }
-@media (max-width: 599px) {
-  .link { display: inline-flex; align-items: center; min-width: var(--tap); min-height: var(--tap); margin: -13px 0; vertical-align: middle; }
-}
-/* @component text and fineprint */
-.prose { display: grid; gap: 12px; max-width: 68ch; font-size: var(--size-prose); }
-.fineprint { font-size: var(--size-small); color: var(--text-secondary); max-width: 70ch; }
-/* @component hero */
-.hero {
-  position: relative;
-  min-height: clamp(460px, 64vh, 660px);
-  border-radius: var(--r-xl);
-  overflow: hidden;
-  display: flex;
-  align-items: flex-end;
-  color: var(--hero-text);
-  isolation: isolate;
-  box-shadow: var(--hark-shadow);
-  background: var(--hero-surface);
-}
-/* Without a photo the hero is as tall as its copy, so the callout sits beside the copy instead of over it. */
-.hero:not(:has(.hero__img)) { min-height: 0; background: var(--hero-surface) center / cover no-repeat; }
-.hero:not(:has(.hero__img))::after { background: linear-gradient(to right, var(--hero-scrim-side) 0%, transparent 60%); }
-@media (min-width: 761px) {
-  .hero:not(:has(.hero__img)) > .callout { position: static; flex: none; align-self: flex-start; margin: clamp(16px, 2.4vw, 24px) clamp(16px, 2.4vw, 24px) clamp(16px, 2.4vw, 24px) auto; }
-}
-.hero__img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 40% 60%;
-  z-index: -2;
-}
-.hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background:
-    linear-gradient(to top, var(--hero-scrim-strong) 0%, var(--hero-scrim-soft) 42%, transparent 66%),
-    linear-gradient(to right, var(--hero-scrim-side) 0%, transparent 60%);
-}
-.hero__copy {
-  display: grid;
-  gap: 14px;
-  max-width: 40rem;
-  padding: clamp(24px, 4vw, 48px);
-  padding-bottom: clamp(28px, 3.4vw, 44px);
-}
-.hero__eyebrow {
-  justify-self: start;
-  padding: 6px 12px;
-  border-radius: var(--r-pill);
-  background: var(--hero-glass);
-  border: 1px solid var(--hero-glass-stroke);
-  -webkit-backdrop-filter: var(--hark-blur);
-  backdrop-filter: var(--hark-blur);
-  font: var(--type-label);
-}
-.hero h1 { font: var(--type-display); letter-spacing: 0; }
-.hero h1 em { font-style: normal; }
-.hero__sub { font: var(--type-lede); max-width: 34ch; }
-.hero__meta { font-size: var(--size-small); color: var(--hero-text-muted); }
-.hero__credit {
-  position: absolute;
-  right: clamp(20px, 3vw, 32px);
-  bottom: 16px;
-  padding: 4px 10px;
-  border-radius: var(--r-pill);
-  background: var(--hero-glass-faint);
-  -webkit-backdrop-filter: var(--hark-blur);
-  backdrop-filter: var(--hark-blur);
-  font: var(--type-caption);
-  color: var(--hero-text-muted);
-}
-.hero > .callout {
-  position: absolute;
-  top: clamp(16px, 2.4vw, 24px);
-  right: clamp(16px, 2.4vw, 24px);
-  width: min(320px, calc(100% - 32px));
-}
-@media (max-width: 760px) {
-  .hero { flex-direction: column; justify-content: flex-end; align-items: stretch; min-height: 0; }
-  .hero__img { object-position: 22% 50%; }
-  .hero__copy { padding-top: 260px; padding-bottom: 28px; }
-  .hero:not(:has(.hero__img)) .hero__copy { padding-top: clamp(24px, 4vw, 48px); }
-  .hero__credit { top: 16px; right: 16px; bottom: auto; }
-  .hero > .callout { position: static; width: auto; margin: 0 12px 12px; }
-}
-/* @component callout */
-.callout {
-  max-width: 420px;
-  display: grid;
-  gap: 10px;
-  padding: 16px 18px 18px;
-  border-radius: var(--r-l);
-  background: var(--mat-agent);
-  -webkit-backdrop-filter: var(--hark-blur);
-  backdrop-filter: var(--hark-blur);
-  border: 1px solid var(--stroke-composer);
-  box-shadow: var(--hark-shadow);
-  color: var(--text-primary);
-  font-size: var(--size-small);
-}
-.callout__head { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-weight: var(--weight-medium); }
-.callout__head svg { color: var(--text-primary); }
-.callout__lead { font-size: var(--size-body); }
-.callout .fineprint { font-size: var(--size-caption); }
-.callout .btn { justify-self: start; }
-/* @component stats */
-.stats { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); padding-top: 8px; }
-.stat {
-  display: grid;
-  grid-template-rows: 1fr auto;
-  gap: 4px;
-  padding: 12px 24px;
-  border-left: 1px solid var(--stroke-secondary);
-}
-.stat:first-child { border-left: 0; padding-left: 0; }
-.stat__fig { font: var(--type-figure); font-variant-numeric: tabular-nums; }
-.stat__label { font-size: var(--size-small); color: var(--text-secondary); }
-@media (max-width: 760px) {
-  .stats { grid-auto-flow: row; grid-template-columns: auto minmax(0, 1fr); column-gap: 12px; padding-top: 0; }
-  .stat { grid-column: 1 / -1; grid-template-columns: subgrid; align-items: baseline; gap: 12px; padding: 14px 0; border-left: 0; border-top: 1px solid var(--stroke-secondary); }
-  .stat:first-child { border-top: 0; }
-}
-/* @component section */
-.section {
-  padding-block: clamp(40px, 6vw, 72px) clamp(16px, 2vw, 24px);
-  border-top: 1px solid var(--stroke-secondary);
-  scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 72px); /* Clears the sticky .nav: its top offset plus its tallest height, 56px. */
-  min-width: 0;
-}
-.section > * + * { margin-top: clamp(20px, 2.4vw, 28px); }
-.section > .head + * { margin-top: 0; }
-.head {
-  display: grid;
-  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
-  gap: 10px 40px;
-  align-items: end;
-  margin-bottom: clamp(24px, 3vw, 36px);
-}
-.head__eyebrow { grid-column: 1 / -1; font: var(--type-label); color: var(--text-secondary); }
-.head h2 { font: var(--type-title); }
-.head__sub { justify-self: end; font-size: var(--size-body); color: var(--text-secondary); max-width: 44ch; text-align: right; }
-@media (max-width: 900px) { .head { grid-template-columns: 1fr; } .head__sub { justify-self: start; text-align: left; } }
-/* @component table */
-.table-wrap { margin-inline: -12px; padding-inline: 12px; overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font: var(--type-small); font-variant-numeric: tabular-nums; }
-caption { text-align: left; font: var(--type-caption); color: var(--text-secondary); padding: 0 0 10px; }
-th, td { text-align: left; vertical-align: top; padding: 12px; border-bottom: 1px solid var(--stroke-secondary); }
-th:first-child, td:first-child { padding-left: 0; }
-th:last-child, td:last-child { padding-right: 0; }
-thead th {
-  font: var(--type-tag);
-  color: var(--text-secondary);
-  border-bottom-color: var(--stroke-primary);
-  padding-top: 0;
-  padding-bottom: 8px;
-  white-space: nowrap;
-}
-tbody th { font-weight: var(--weight-bold); }
-tbody tr:last-child > * { border-bottom: 0; }
-.rowhead { white-space: nowrap; }
-td small, th small { display: block; font: var(--type-caption); color: var(--text-secondary); margin-top: 2px; }
-td.num { font-weight: var(--weight-bold); white-space: nowrap; }
-td.num small { white-space: normal; }
-.muted { color: var(--text-secondary); }
-tr.is-highlight > * { background: var(--fill-tertiary); }
-tr.is-highlight > :first-child { box-shadow: -12px 0 var(--fill-tertiary); }
-tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
-.after-table { margin-top: 20px; padding-inline: 12px; }
-@media (max-width: 599px) {
-  .table-wrap table, .table-wrap tbody, .table-wrap tr, .table-wrap th, .table-wrap td { display: block; }
-  .table-wrap thead { display: none; }
-  .table-wrap caption { display: block; text-align: left; }
-  .table-wrap tbody tr { padding: 12px 0; border-bottom: 1px solid var(--stroke-secondary); }
-  .table-wrap tbody tr.is-highlight { margin-inline: -12px; padding-inline: 12px; background: var(--fill-tertiary); }
-  .table-wrap tbody tr.is-highlight > * { background: none; box-shadow: none; }
-  .table-wrap tbody tr > * { border-bottom: 0; padding: 2px 0; }
-  .table-wrap tbody td.is-empty { display: none; }
-  .table-wrap tbody td[data-label] { display: grid; grid-template-columns: minmax(0, 8em) minmax(0, 1fr); column-gap: 12px; }
-  .table-wrap tbody td[data-label]::before { content: attr(data-label) " "; color: var(--text-secondary); font-size: var(--size-caption); }
-  .rowhead { white-space: normal; }
-}
-/* @component compare */
-.compare { margin-inline: -12px; overflow-x: auto; scroll-snap-type: x mandatory; }
-.compare table { table-layout: fixed; min-width: calc(var(--compare-cols, 3) * 200px); }
-.compare th, .compare td { scroll-snap-align: start; padding-inline: 12px; }
-.compare thead th { font: var(--type-body-strong); color: var(--text-primary); white-space: normal; padding-top: 0; padding-bottom: 14px; border-bottom-color: var(--stroke-secondary); }
-/* On light tiles a white product backdrop blends into the grey. */
-.compare__media { position: relative; display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: center; width: 100%; aspect-ratio: 4 / 3; max-height: 240px; margin: 0 0 12px; padding: 16px; border-radius: var(--r-m); background: var(--fill-tertiary); }
-.compare__media img { max-width: 100%; max-height: 100%; mix-blend-mode: multiply; }
-.compare thead th > .chip { display: flex; width: fit-content; margin-top: 8px; }
-.compare:has(.compare__media) thead th:not(:has(.compare__media))::before { content: ""; display: block; width: 100%; aspect-ratio: 4 / 3; max-height: 240px; margin-bottom: 12px; border-radius: var(--r-m); background: var(--fill-tertiary); }
-:root[data-theme="dark"] .compare__media img { mix-blend-mode: normal; border-radius: var(--r-s); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .compare__media img { mix-blend-mode: normal; border-radius: var(--r-s); } }
-/* The header column shrinks to nothing on screen but stays in the table, so screen readers keep each value's row header. */
-.js .compare tbody th[scope="row"], .js .compare thead td:first-child { width: 0; padding: 0; border: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.js .compare td[data-label]::before { content: attr(data-label); content: attr(data-label) / ""; display: block; margin-bottom: 4px; font: var(--type-caption); color: var(--text-secondary); }
-@media (max-width: 599px) { .compare table { min-width: calc(var(--compare-cols, 3) * 68vw); } }
-/* @component steps */
-.step {
-  display: grid;
-  grid-template-columns: 112px minmax(0, 1fr) minmax(220px, 0.78fr);
-  gap: 16px 28px;
-  padding: 28px 0;
-  border-bottom: 1px solid var(--stroke-secondary);
-}
-.step > * { min-width: 0; }
-.steps > .step:last-child { border-bottom: 0; }
-.step p + p { margin-top: 8px; }
-.step__num { font: var(--type-numeral); color: var(--text-primary); font-variant-numeric: tabular-nums; }
-.step__eyebrow { margin-top: 8px; font: var(--type-label); color: var(--text-secondary); }
-.step h3 { font: var(--type-heading); margin-bottom: 12px; }
-.step__pills { list-style: none; margin: 0 0 14px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
-.step__pills li {
-  padding: 4px 10px;
-  border-radius: var(--r-pill);
-  border: 1px solid var(--stroke-primary);
-  font-size: var(--size-meta);
-  color: var(--text-secondary);
-  max-width: 100%;
-}
-.step__pills b { color: var(--text-primary); font-weight: var(--weight-bold); }
-.step__panel {
-  align-self: start;
-  margin: 0;
-  padding: 16px 18px;
-  border-radius: var(--r-m);
-  background: var(--fill-tertiary);
-  font-size: var(--size-small);
-}
-.step__panel dt { font-size: var(--size-caption); color: var(--text-secondary); margin-bottom: 2px; }
-.step__panel dd { margin: 0 0 12px; }
-.step__panel dd:last-child { margin-bottom: 0; }
-.step__panel .fineprint { display: block; margin-top: 6px; font-size: var(--size-caption); }
-.step__panel .btn { margin-top: 8px; }
-.step__figure { grid-column: 2 / span 2; margin: 0; }
-.step__figure img { width: 100%; height: clamp(200px, 26vw, 320px); object-fit: cover; border-radius: var(--r-m); }
-.step__figure figcaption { font-size: var(--size-caption); color: var(--text-secondary); padding-top: 10px; }
-@media (min-width: 901px) {
-  .step:not(:has(> .step__panel)) { grid-template-columns: 112px minmax(0, 1fr); }
-  .step:not(:has(> .step__panel)) > .step__figure { grid-column: 2; }
-}
-@media (max-width: 900px) {
-  .step { grid-template-columns: minmax(0, 1fr); gap: 14px; }
-  .step__figure { grid-column: 1; }
-  .step__intro { display: flex; align-items: baseline; gap: 14px; }
-  .step__num { font-size: 40px; }
-  .step__eyebrow { margin-top: 0; }
-}
-/* @component checklist */
-.checklist { display: grid; grid-template-columns: minmax(0, 1.4fr) auto minmax(0, 1fr); column-gap: 20px; list-style: none; margin: 0; padding: 0; }
-.checklist:not(:has(.checklist__note)) { grid-template-columns: minmax(0, 1fr) auto; }
-.checklist > li {
-  display: grid;
-  grid-column: 1 / -1;
-  grid-template-columns: subgrid;
-  row-gap: 8px;
-  align-items: center;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--stroke-secondary);
-}
-.checklist > li:last-child { border-bottom: 0; }
-.checklist__item { grid-column: 1; font-weight: var(--weight-bold); }
-.checklist > li > .chip { grid-column: 2; justify-self: start; }
-.checklist:not(:has(.checklist__note)) > li > .chip { justify-self: end; }
-.checklist__item small { display: block; font-weight: var(--weight-regular); font-size: var(--size-caption); color: var(--text-secondary); margin-top: 2px; }
-.checklist__note { grid-column: 3; font-size: var(--size-small); color: var(--text-secondary); }
-.checklist > li.is-done .checklist__item { text-decoration: line-through; text-decoration-color: var(--text-tertiary); }
-@media (max-width: 760px) {
-  .checklist { grid-template-columns: minmax(0, 1fr) auto; }
-  .checklist > li > .chip { justify-self: end; }
-  .checklist__note { grid-column: 1 / -1; }
-}
-/* @component breakdown */
-.breakdown { max-width: 720px; }
-@media (min-width: 901px) { .section > .breakdown, .section > .aside { max-width: calc((100% - 40px) * 1.65 / 2.65); } }
-.breakdown dl { margin: 0; }
-.breakdown .row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--stroke-secondary);
-}
-.breakdown dt { font-size: var(--size-body); }
-.breakdown dt small { display: block; color: var(--text-secondary); font-size: var(--size-meta); margin-top: 2px; }
-.breakdown dd { margin: 0; font-weight: var(--weight-bold); font-size: var(--size-body); white-space: nowrap; font-variant-numeric: tabular-nums; }
-.breakdown .row--total {
-  margin-top: -1px;
-  padding: 18px 0 0;
-  border-top: 1px solid var(--stroke-primary);
-  border-bottom: 0;
-  flex-wrap: wrap;
-  align-items: baseline;
-}
-.breakdown .row--total dt { font: var(--type-body-strong); }
-.breakdown .row--total dd { font: var(--type-figure); white-space: normal; }
-.breakdown .fineprint { margin-top: 16px; }
-/* @component pair */
-.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); align-items: start; }
-.pair:has(> :is(.callout, .aside):last-child) { grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); column-gap: 40px; }
-.pair > .callout { max-width: none; }
-@media (max-width: 760px) { .pair, .pair:has(> :is(.callout, .aside):last-child) { grid-template-columns: minmax(0, 1fr); } }
-/* @component timeline */
-.timeline { display: grid; grid-template-columns: 210px minmax(0, 1fr) auto; column-gap: 28px; list-style: none; margin-inline: 0; margin-bottom: 0; padding: 0; }
-.timeline > li {
-  display: grid;
-  grid-column: 1 / -1;
-  grid-template-columns: subgrid;
-  row-gap: 8px;
-  align-items: start;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--stroke-secondary);
-}
-.timeline > li:first-child { padding-top: 0; }
-.timeline > li:last-child { border-bottom: 0; padding-bottom: 0; }
-.timeline__when { display: flex; align-items: baseline; gap: 12px; font-weight: var(--weight-bold); }
-.timeline__when::before {
-  content: "";
-  width: 8px; height: 8px;
-  flex: none;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1.5px var(--text-tertiary);
-  transform: translateY(-1px);
-}
-.timeline > li.is-current .timeline__when::before { background: var(--fill-system-orange); box-shadow: 0 0 0 4px var(--stroke-system-orange); }
-.timeline > li > p:has(> .chip:only-child) { justify-self: end; }
-.timeline__what ul { margin: 0; padding-left: 18px; }
-.timeline__what li { margin-bottom: 4px; }
-.timeline__what li:last-child { margin-bottom: 0; }
-.timeline__what p + p { margin-top: 6px; }
-@media (max-width: 900px) {
-  .timeline { grid-template-columns: minmax(0, 1fr); }
-  .timeline > li > p:has(> .chip:only-child) { justify-self: start; }
-  .timeline__what, .timeline > li > p:last-child { padding-left: 20px; }
-}
-/* @component cards */
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; }
-.cards:has(> :nth-child(4):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.cards > div { padding: 22px 24px; border-radius: var(--r-m); background: var(--fill-tertiary); }
-.cards h3 { font: var(--type-heading); margin-bottom: 10px; }
-.cards ul { margin: 0; padding: 0; list-style: none; }
-.cards li { padding: 10px 0; border-bottom: 1px solid var(--stroke-secondary); }
-.cards li:last-child { border-bottom: 0; padding-bottom: 0; }
-.cards__media { display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: center; aspect-ratio: 4 / 3; max-height: 220px; margin: 0 0 14px; padding: 12px; border-radius: var(--r-s); background: var(--fill-primary-on); }
-.cards__media img { max-width: 100%; max-height: 100%; mix-blend-mode: multiply; }
-:root[data-theme="dark"] .cards__media img { mix-blend-mode: normal; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .cards__media img { mix-blend-mode: normal; } }
-.cards .quote { font: var(--type-heading); margin-bottom: 8px; text-wrap: balance; }
-@media (max-width: 900px) { .cards { grid-template-columns: 1fr; } }
-@media (max-width: 760px) { .cards:has(> :nth-child(4):last-child) { grid-template-columns: minmax(0, 1fr); } }
-/* @component aside */
-.aside {
-  max-width: 62ch;
-  padding: 20px 22px;
-  border: 1.5px dashed var(--stroke-primary);
-  border-radius: var(--r-m);
-}
-.aside h3 { font: var(--type-heading); margin-bottom: 6px; }
-/* @component chart */
-.chart { margin-bottom: 8px; padding: 20px 20px 12px; border-radius: var(--r-m); background: var(--fill-tertiary); overflow-x: auto; }
-.chart__cap { font-size: var(--size-caption); color: var(--text-secondary); margin-bottom: 12px; }
-.chart svg { width: 100%; height: auto; display: block; }
-.pf-grid { stroke: var(--stroke-primary); stroke-width: 1; }
-.pf-line { stroke: var(--fill-primary); stroke-width: 2.4; fill: none; stroke-linejoin: round; stroke-linecap: round; }
-.pf-fill { fill: var(--fill-primary); opacity: 0.07; }
-.pf-dot { fill: var(--fill-primary-on); stroke: var(--fill-primary); stroke-width: 2; }
-.pf-alt { fill: var(--text-primary); font: var(--weight-bold) var(--size-body) var(--sans); text-anchor: middle; }
-.pf-name { fill: var(--text-secondary); font: var(--weight-medium) var(--size-meta) var(--sans); text-anchor: middle; }
-.pf-num { fill: var(--text-tertiary); font: var(--weight-medium) var(--size-meta) var(--sans); text-anchor: middle; }
-.pf-axis { fill: var(--text-secondary); font: var(--weight-regular) var(--size-caption) var(--sans); }
-.js .chart:not(.is-in) .pf-line { stroke-dasharray: 1400; stroke-dashoffset: 1400; }
-.js .chart.is-in .pf-line { stroke-dasharray: 1400; stroke-dashoffset: 0; transition: stroke-dashoffset var(--dur-draw) var(--ease-out) 120ms; }
-@media (prefers-reduced-motion: reduce) { .js .chart .pf-line { stroke-dasharray: none; stroke-dashoffset: 0; transition: none; } }
-/* @component figure */
-.band { margin-inline: 0; margin-bottom: 0; }
-.band img { width: 100%; height: clamp(240px, 40vw, 520px); object-fit: cover; border-radius: var(--r-xl); }
-.band figcaption { font-size: var(--size-caption); color: var(--text-secondary); padding: 10px 4px 0; }
-.is-portrait img { width: auto; max-width: 100%; height: clamp(320px, 48vw, 560px); }
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Therapeutically Yours by Megha Gupta: therapy, career guidance and training</title>
+<meta name="description" content="A gentle space for your mind, your work and your life. Therapy, career guidance and psychology training with Megha Gupta, online and in person in India." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Inter:wght@400;500;600&display=swap" />
+<style>
+:root{--bg:#F7F6F1;--surface:#E7EEEC;--mist:#D9E6E3;--text:#22343A;--muted:#4F6266;--cta:#3D6B6E;--cta-h:#2F5659;--deco:#86A8A4;--sand:#D8BF8E;--foot:#1F3236;--r:20px;--line:1px solid rgba(34,52,58,.12);--shadow:0 10px 40px -18px rgba(34,52,58,.28);--ease:cubic-bezier(.22,.61,.36,1);--slow:5s;--serif:"Fraunces",Georgia,serif;--sans:"Inter",system-ui,sans-serif;--max:1120px;--pad:clamp(20px,5vw,48px)}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{margin:0;background:var(--bg);color:var(--text);font:400 18px/1.7 var(--sans);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+h1,h2,h3{font-family:var(--serif);font-weight:300;line-height:1.2;margin:0 0 .5em;letter-spacing:-.01em}
+h1{font-size:clamp(2.3rem,6vw,4rem)}h2{font-size:clamp(1.8rem,4vw,2.6rem)}h3{font-size:1.35rem;font-weight:400}
+p{margin:0 0 1em;max-width:65ch}
+a{color:var(--cta);text-underline-offset:3px}
+a:hover{color:var(--cta-h)}
+:focus-visible{outline:3px solid var(--cta);outline-offset:3px;border-radius:6px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+.sec{padding:clamp(72px,11vw,128px) 0}
+.sec--tint{background:var(--surface)}
+.eyebrow{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:.8em}
+.lead{font-size:1.15rem;color:var(--muted)}
+.muted{color:var(--muted)}
+.small{font-size:.9rem}
+.skip{position:absolute;left:-999px;top:8px;background:var(--cta);color:#fff;padding:10px 16px;border-radius:999px;z-index:100}
+.skip:focus{left:8px}
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;min-height:48px;padding:.7em 1.4em;border-radius:999px;background:var(--cta);color:#fff;font:500 1rem/1.2 var(--sans);text-decoration:none;border:0;cursor:pointer;transition:background .6s var(--ease),transform .6s var(--ease)}
+.btn:hover{background:var(--cta-h);color:#fff}
+.btn--ghost{background:transparent;color:var(--cta);border:1px solid var(--cta)}
+.btn--ghost:hover{background:var(--mist);color:var(--cta-h)}
+.next{margin-top:clamp(40px,6vw,64px);display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;color:var(--muted)}
+.next p{margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:10px;padding:0;margin:0 0 1.5em;list-style:none}
+.chips li{background:var(--sand);color:var(--text);padding:.35em .95em;border-radius:999px;font-size:.9rem;font-weight:500}
+.placeholder{border:1.5px dashed var(--deco);border-radius:var(--r);padding:20px 24px;color:var(--muted);background:rgba(255,255,255,.35)}
+.card{background:var(--bg);border:var(--line);border-radius:var(--r);padding:28px;box-shadow:var(--shadow)}
+.grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+/* urgent */
+.urgent-bar{background:var(--foot);color:#fff;text-align:center;font-size:.95rem}
+.urgent-bar button{background:none;border:0;color:#fff;font:500 .95rem var(--sans);min-height:44px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0 12px}
+.urgent{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(31,50,54,.55)}
+.urgent.open{display:flex}
+.urgent__box{background:var(--bg);border-radius:var(--r);max-width:520px;width:100%;padding:32px;box-shadow:0 30px 80px -20px rgba(0,0,0,.4);position:relative}
+.urgent__box h2{font-size:1.7rem}
+.urgent__close{position:absolute;top:12px;right:12px;width:44px;height:44px;border-radius:50%;border:var(--line);background:var(--surface);font-size:1.4rem;cursor:pointer;color:var(--text)}
+.urgent__lines{display:grid;gap:12px;margin:20px 0}
+.urgent__lines a{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);border-radius:14px;padding:14px 18px;text-decoration:none;color:var(--text);min-height:56px}
+.urgent__lines strong{font-family:var(--serif);font-weight:400;font-size:1.35rem;color:var(--cta-h)}
+.fab{position:fixed;right:18px;bottom:18px;z-index:80;background:var(--foot);color:#fff;border:0;border-radius:999px;min-height:48px;padding:0 20px;font:500 .95rem var(--sans);box-shadow:var(--shadow);cursor:pointer}
+.fab:hover{background:var(--cta-h)}
+/* header */
+.hdr{position:sticky;top:0;z-index:50;background:rgba(247,246,241,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:var(--line)}
+.hdr .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:72px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-family:var(--serif);font-size:1.2rem}
+.logo svg{width:34px;height:34px;flex:none}
+.nav{display:flex;align-items:center;gap:6px}
+.nav a{color:var(--text);text-decoration:none;padding:10px 12px;border-radius:999px;font-size:.95rem}
+.nav a:hover{background:var(--surface);color:var(--text)}
+.nav .btn{color:#fff;margin-left:8px;padding:.6em 1.2em}
+.nav-toggle{display:none;width:44px;height:44px;border-radius:50%;border:var(--line);background:transparent;cursor:pointer;color:var(--text)}
+@media(max-width:860px){
+.nav-toggle{display:inline-flex;align-items:center;justify-content:center}
+.nav{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;background:var(--bg);border-bottom:var(--line);padding:12px var(--pad) 20px}
+.nav.open{display:flex}.nav a{padding:12px}.nav .btn{margin:8px 0 0}}
+/* hero */
+.hero{position:relative;min-height:min(92vh,860px);display:flex;align-items:center;overflow:hidden}
+.hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:drift 40s var(--ease) infinite alternate}
+.hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(100deg,rgba(247,246,241,.96) 0%,rgba(247,246,241,.86) 45%,rgba(247,246,241,.45) 100%)}
+.hero .wrap{position:relative;z-index:2;padding-top:72px;padding-bottom:72px;width:100%}
+.hero h1{max-width:14ch;animation:rise 1.8s var(--ease) both}
+.hero .lead{color:var(--text);max-width:42ch;animation:rise 2.2s var(--ease) both}
+.doors{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));margin:40px 0 24px}
+.door{display:flex;flex-direction:column;gap:8px;background:rgba(247,246,241,.92);border:var(--line);border-radius:var(--r);padding:26px;text-decoration:none;color:var(--text);box-shadow:var(--shadow);transition:transform 1.2s var(--ease),background 1.2s var(--ease)}
+.door:hover{transform:translateY(-4px);background:#fff;color:var(--text)}
+.door strong{font-family:var(--serif);font-weight:400;font-size:1.35rem;line-height:1.3}
+.door span{color:var(--muted);font-size:.95rem}
+.door i{font-style:normal;color:var(--cta);margin-top:auto;font-weight:500}
+@keyframes drift{from{transform:scale(1.02)}to{transform:scale(1.1) translateX(-1.5%)}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+/* tool anchors */
+.tool-slot{min-height:120px}
+/* after the rain */
+.rain{position:relative;overflow:hidden;padding:clamp(96px,14vw,160px) 0;text-align:center}
+.rain>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.rain::before{content:"";position:absolute;inset:0;z-index:1;background:rgba(247,246,241,.82)}
+.rain .wrap{position:relative;z-index:2}
+.quotes{position:relative;min-height:9em;max-width:760px;margin:24px auto}
+.quote{position:absolute;inset:0;margin:0;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:300;font-size:clamp(1.5rem,3.6vw,2.3rem);line-height:1.35;opacity:0;transition:opacity var(--slow) var(--ease)}
+.quote.on{opacity:1}
+.rain p{margin-left:auto;margin-right:auto}
+.rain .next{justify-content:center}
+/* megha */
+.meet{display:grid;gap:clamp(32px,6vw,72px);grid-template-columns:minmax(0,5fr) minmax(0,6fr);align-items:start}
+.meet img{border-radius:var(--r);box-shadow:var(--shadow);aspect-ratio:4/5;object-fit:cover;width:100%}
+@media(max-width:820px){.meet{grid-template-columns:1fr}.meet img{aspect-ratio:4/3}}
+.stack{display:grid;gap:14px;margin:24px 0}
+.first{list-style:none;padding:0;margin:20px 0 0;counter-reset:f;display:grid;gap:14px}
+.first li{counter-increment:f;display:flex;gap:16px;align-items:baseline}
+.first li::before{content:counter(f);flex:none;width:36px;height:36px;border-radius:50%;background:var(--mist);display:inline-flex;align-items:center;justify-content:center;font-family:var(--serif);color:var(--cta-h)}
+/* navigating + faq */
+details.nav-card{background:var(--bg);border:var(--line);border-radius:var(--r);transition:box-shadow 1s var(--ease)}
+details.nav-card[open]{box-shadow:var(--shadow)}
+details summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:44px}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"+";font-size:1.5rem;color:var(--cta);transition:transform .8s var(--ease);flex:none}
+details[open] summary::after{transform:rotate(45deg)}
+.nav-card summary{padding:22px 24px;font-family:var(--serif);font-size:1.2rem}
+.nav-card .body{padding:0 24px 24px}
+.nav-card .body p{font-family:var(--serif);font-weight:300;font-size:1.15rem}
+.faq{max-width:780px}
+.faq details{border-bottom:var(--line)}
+.faq summary{padding:20px 0;font-weight:500}
+.faq details p{padding-bottom:12px;color:var(--muted)}
+/* services */
+.svc{display:flex;flex-direction:column}
+.svc ul{padding-left:1.1em;margin:0 0 1.5em;color:var(--muted)}
+.svc li{margin-bottom:.3em}
+.svc .btn{margin-top:auto;align-self:flex-start}
+.svc svg{width:36px;height:36px;color:var(--deco);margin-bottom:14px}
+/* how */
+.how{list-style:none;padding:0;margin:32px 0 0;display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));counter-reset:h}
+.how li{counter-increment:h;position:relative;padding:24px;border-radius:var(--r);background:var(--mist)}
+.how li::before{content:"0" counter(h);display:block;font-family:var(--serif);font-size:2rem;color:var(--cta-h);margin-bottom:6px}
+.how strong{display:block;font-family:var(--serif);font-weight:400;font-size:1.2rem}
+/* fees + contact */
+.fee{display:flex;flex-direction:column;gap:12px}
+.fee .placeholder{text-align:center}
+.contact-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));margin:28px 0}
+.contact-grid .placeholder{padding:16px 20px}
+.contact-grid strong{display:block;color:var(--text);font-weight:500}
+/* footer */
+.foot{background:var(--foot);color:#E7EEEC;padding:64px 0 96px;font-size:.95rem}
+.foot a{color:#fff}
+.foot .brand{font-family:var(--serif);font-size:1.5rem;color:#fff;margin-bottom:.6em}
+.foot hr{border:0;border-top:1px solid rgba(255,255,255,.15);margin:28px 0}
+.logo,.next a,.foot a,.faq details a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px}
+/* reveal */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity 1.6s var(--ease),transform 1.6s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}}
 </style>
-    <style>.hero:not(:has(.hero__img)) { background-image: url("images/texture.webp"); }
-</style>
-    <script>document.documentElement.classList.add("x-js");</script>
-    <style>
-      :root {
-        color-scheme: light;
-        --x-forest: #2f4a3a;
-        --x-forest-deep: #22382b;
-        --x-sand: #e3c99a;
-        --x-cream: #fbf8f1;
-        --x-paper: #fffdf8;
-        --x-ink: #26352c;
-        --x-mute: #56645b;
-        --x-gold: #c9a564;
-        --x-gold-ink: #8a6a35;
-        --x-line: rgb(47 74 58 / 0.16);
-        --x-serif: "Cormorant Garamond", "Playfair Display", Georgia, serif;
-        --x-script: "Great Vibes", "Parisienne", cursive;
-        --x-flecks:
-          radial-gradient(circle at 12% 18%, var(--x-gold) 0 1.5px, transparent 2.5px),
-          radial-gradient(circle at 78% 9%, var(--x-gold) 0 1px, transparent 2px),
-          radial-gradient(circle at 88% 64%, var(--x-gold) 0 2px, transparent 3px),
-          radial-gradient(circle at 34% 86%, var(--x-gold) 0 1px, transparent 2px),
-          radial-gradient(circle at 6% 72%, var(--x-gold) 0 1px, transparent 2px),
-          radial-gradient(circle at 58% 30%, var(--x-gold) 0 1px, transparent 2px);
-      }
-      body { background: var(--x-forest-deep); color: var(--x-ink); }
-      .x-backdrop { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; max-width: none; }
-      .x-tint { position: fixed; inset: 0; z-index: -1; background: rgb(34 56 43 / 0.5); pointer-events: none; }
-      .x-flower { position: absolute; top: 140px; right: max(-160px, -12vw); width: clamp(190px, 30vw, 440px); z-index: 4; pointer-events: none; opacity: 0.96; animation: x-sway 9s ease-in-out infinite; transform-origin: 60% 100%; }
-      .x-flower-clip { position: absolute; top: 0; left: 0; width: 100%; height: 1000px; overflow: hidden; pointer-events: none; z-index: 4; }
-      html, body { overflow-x: clip; }
-      @keyframes x-sway { 50% { transform: rotate(-2deg); } }
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
 
-      /* announcement + nav */
-      .x-announce { background: var(--x-forest-deep); color: #f3ecdc; text-align: center; padding: 9px var(--gutter); font: var(--type-tag); letter-spacing: 0.18em; text-transform: uppercase; }
-      .x-nav { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px clamp(16px, 3vw, 32px); background: rgb(251 248 241 / 0.92); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid var(--x-line); }
-      .x-logo { font-family: var(--x-serif); font-weight: 400; font-size: 22px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--x-forest); text-decoration: none; line-height: 1.1; min-height: var(--tap); display: flex; align-items: center; }
-      .x-logo span { font-family: var(--x-script); text-transform: none; letter-spacing: 0; font-size: 26px; color: var(--x-gold-ink); margin-left: 6px; }
-      .x-links { display: flex; align-items: center; gap: 2px; list-style: none; margin: 0; padding: 0; }
-      .x-links a:not(.x-btn) { display: flex; align-items: center; min-height: var(--tap); padding: 0 12px; font: var(--type-tag); letter-spacing: 0.16em; text-transform: uppercase; color: var(--x-ink); text-decoration: none; }
-      .x-links a:not(.x-btn):hover { color: var(--x-gold-ink); }
-      .x-links li:last-child { margin-left: 10px; }
-      .x-menu { display: none; min-height: var(--tap); padding: 0 14px; border: 1px solid var(--x-forest); background: transparent; color: var(--x-forest); font: var(--type-tag); letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer; }
-      @media (max-width: 960px) {
-        .x-menu { display: block; }
-        .x-links { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: stretch; padding: 8px 16px 18px; background: var(--x-cream); border-bottom: 1px solid var(--x-line); box-shadow: 0 18px 30px rgb(34 56 43 / 0.12); }
-        .x-links.is-open { display: flex; }
-        .x-links li:last-child { margin: 8px 0 0; }
-        .x-links .x-btn { width: 100%; }
-      }
+<div class="urgent-bar"><button type="button" data-urgent aria-haspopup="dialog">Need urgent help?</button></div>
 
-      /* buttons, type */
-      .x-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: var(--tap); padding: 0 24px; border: 1px solid var(--x-forest); background: var(--x-forest); color: #fff; font: var(--weight-medium) 12px/1.2 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; cursor: pointer; transition: background var(--dur-quick), color var(--dur-quick), transform var(--dur-quick) var(--ease-out); }
-      .x-btn:hover { background: var(--x-forest-deep); transform: translateY(-1px); }
-      .x-btn--sand { background: var(--x-sand); border-color: var(--x-sand); color: var(--x-forest-deep); }
-      .x-btn--sand:hover { background: #ecd7b0; }
-      .x-btn--ghost { background: transparent; color: var(--x-forest); }
-      .x-btn--ghost:hover { background: var(--x-forest); color: #fff; }
-      .x-btn--light { background: transparent; border-color: rgb(255 255 255 / 0.7); color: #fff; }
-      .x-btn--light:hover { background: rgb(255 255 255 / 0.12); }
-      .x-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
-      .x-script { display: block; font-family: var(--x-script); font-size: clamp(44px, 6vw, 68px); line-height: 1; color: var(--x-gold-ink); font-weight: 400; margin-bottom: 4px; }
-      .x-h1, .x-h2 { font-family: var(--x-serif); font-weight: 300; text-transform: uppercase; letter-spacing: 0.1em; color: var(--x-forest); line-height: 1.15; }
-      .x-h1 { font-size: clamp(30px, 4.2vw, 50px); }
-      .x-h2 { font-size: clamp(26px, 3.4vw, 40px); }
-      .x-h3 { font-family: var(--x-serif); font-weight: 500; font-size: 22px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--x-forest); line-height: 1.2; }
-      .x-eyebrow { font: var(--type-tag); letter-spacing: 0.22em; text-transform: uppercase; color: var(--x-mute); margin-bottom: 14px; }
-      .x-lede { font-family: var(--x-serif); font-size: clamp(19px, 2vw, 23px); font-style: italic; color: var(--x-mute); line-height: 1.45; margin-top: 18px; max-width: 34em; }
-      .x-body { font-size: 16px; line-height: 1.7; color: var(--x-ink); margin-top: 16px; max-width: 38em; }
-      .x-rule { width: 64px; height: 1px; background: var(--x-gold); margin: 22px 0; border: 0; }
-      .x-center { text-align: center; }
-      .x-center .x-rule, .x-center .x-lede, .x-center .x-body { margin-inline: auto; }
-      .x-center .x-btns { justify-content: center; }
-
-      /* sheets and bands */
-      .x-sheet { position: relative; background: var(--x-cream); padding: clamp(48px, 7vw, 96px) clamp(20px, 5vw, 72px); overflow: hidden; }
-      .x-sheet--paper { background: var(--x-paper); }
-      .x-band { position: relative; padding: clamp(56px, 8vw, 110px) clamp(20px, 5vw, 72px); color: #fff; background: rgb(28 46 36 / 0.42); overflow: hidden; }
-      .x-band::after { content: ""; position: absolute; inset: 0; background-image: var(--x-flecks); background-size: 520px 360px; opacity: 0.9; pointer-events: none; }
-      .x-band .x-h2, .x-band .x-eyebrow, .x-band .x-lede, .x-band .x-body { color: #fff; }
-      .x-band .x-script { color: var(--x-sand); }
-      .x-band .x-rule { background: var(--x-sand); }
-      .x-band > * { position: relative; z-index: 1; }
-      .x-head { margin-bottom: clamp(32px, 5vw, 56px); }
-      .x-col-main { gap: 0; }
-      .x-col-main > * + * { margin-top: 0; }
-
-      /* split + offset frame */
-      .x-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(40px, 6vw, 88px); align-items: center; }
-      .x-split--wide { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); }
-      @media (max-width: 820px) { .x-split, .x-split--wide { grid-template-columns: minmax(0, 1fr); } .x-split .x-frame { order: -1; } }
-      .x-frame { position: relative; isolation: isolate; margin: 26px 26px 26px 26px; }
-      .x-frame::before { content: ""; position: absolute; left: -26px; bottom: -26px; width: 72%; height: 78%; background: var(--x-forest); z-index: -1; }
-      .x-frame::after { content: ""; position: absolute; inset: -16px -16px 16px 16px; border: 1px solid var(--x-gold); z-index: -1; }
-      .x-frame img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; box-shadow: 0 20px 40px rgb(34 56 43 / 0.18); }
-      .x-frame--flip::before { left: auto; right: -26px; }
-      .x-frame--flip::after { inset: -16px 16px 16px -16px; }
-      .x-frame--land img { aspect-ratio: 5 / 4; }
-
-      /* hero */
-      .x-hero { padding-top: clamp(40px, 6vw, 80px); }
-      .x-hero::before { content: ""; position: absolute; inset: -20%; background: radial-gradient(circle at 30% 40%, rgb(143 168 146 / 0.32), transparent 55%), radial-gradient(circle at 80% 70%, rgb(227 201 154 / 0.28), transparent 50%); animation: x-breathe 14s ease-in-out infinite; pointer-events: none; }
-      .x-hero::after { content: ""; position: absolute; inset: 0; background-image: var(--x-flecks); background-size: 640px 420px; opacity: 0.8; pointer-events: none; }
-      .x-hero > * { position: relative; z-index: 1; }
-      @keyframes x-breathe { 0%, 100% { transform: scale(1); opacity: 0.55; } 30%, 55% { transform: scale(1.07); opacity: 1; } }
-
-      /* breathing orb */
-      .x-breath { display: grid; justify-items: center; gap: 18px; margin-top: 48px; }
-      .x-orb-wrap { position: relative; width: clamp(200px, 50vw, 270px); aspect-ratio: 1; display: grid; place-items: center; }
-      .x-orb-wrap::before { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 1px dashed rgb(227 201 154 / 0.6); }
-      .x-orb { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #5f7d68 0%, #4e6c58 45%, #3e5a48 75%, #33503e 100%); box-shadow: 0 0 60px 18px rgb(214 228 207 / 0.4), inset 0 0 40px rgb(227 201 154 / 0.25); transform: scale(0.55); transition: transform 1s ease-in-out; }
-      .x-orb-text { position: relative; text-align: center; color: #fff; text-shadow: 0 1px 6px rgb(20 34 26 / 0.6); }
-      .x-orb-word { display: block; font-family: var(--x-serif); font-size: 30px; letter-spacing: 0.12em; text-transform: uppercase; }
-      .x-orb-secs { display: block; font: var(--type-label); min-height: 1.3em; }
-      .x-breath-meta { font: var(--type-small); letter-spacing: 0.08em; }
-
-      /* pills and placeholders */
-      .x-tags { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 22px 0 0; }
-      .x-tags li { padding: 7px 14px; border: 1px solid var(--x-line); background: var(--x-paper); border-radius: var(--r-pill); font: var(--type-tag); letter-spacing: 0.06em; color: var(--x-forest); }
-      .x-ph { display: block; margin-top: 20px; padding: 12px 16px; border: 1.5px dashed var(--x-gold); background: rgb(227 201 154 / 0.14); color: #3f4a43; font-family: var(--x-serif); font-style: italic; font-size: 18px; }
-      .x-ph--inline { display: inline-block; margin: 0; padding: 2px 10px; font-size: 16px; }
-      .x-soon { font-family: var(--x-serif); font-style: italic; font-size: 0.98em; color: var(--x-gold-ink); white-space: nowrap; }
-      .x-badge { display: inline-block; padding: 4px 10px; border: 1px solid var(--x-gold); color: var(--x-gold-ink); font: var(--type-tag); letter-spacing: 0.16em; text-transform: uppercase; background: var(--x-paper); }
-
-      .x-page { gap: 0; padding-block: 0 40px; }
-      .x-page > .main { gap: 0; }
-
-      /* toolkit */
-      .x-checkin { position: relative; max-width: 760px; margin: 0 auto clamp(40px, 6vw, 64px); padding: clamp(24px, 4vw, 44px); background: var(--x-paper); border: 1px solid var(--x-line); box-shadow: 0 18px 40px rgb(34 56 43 / 0.08); }
-      .x-checkin::before { content: ""; position: absolute; inset: 10px; border: 1px solid rgb(201 165 100 / 0.45); pointer-events: none; }
-      .x-checkin > * { position: relative; }
-      .x-field { position: relative; margin-top: 22px; }
-      .x-field textarea { width: 100%; min-height: 140px; resize: vertical; padding: 16px; border: 1px solid var(--x-line); background: var(--x-cream); color: var(--x-ink); font: 17px/1.6 var(--x-serif); }
-      .x-field textarea:focus { outline: 2px solid var(--x-forest); outline-offset: 2px; }
-      .x-count { display: block; text-align: right; font: var(--type-caption); color: var(--x-mute); margin-top: 6px; }
-      .x-checkin-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; }
-      .x-note { font: var(--type-caption); letter-spacing: 0.08em; color: var(--x-mute); }
-      .x-released { min-height: 1.4em; margin-top: 14px; font-family: var(--x-serif); font-style: italic; font-size: 18px; color: var(--x-forest); text-align: center; }
-      .x-float { position: absolute; left: 16px; right: 16px; top: 16px; font: 17px/1.6 var(--x-serif); color: var(--x-forest); white-space: pre-wrap; overflow: hidden; max-height: 120px; pointer-events: none; animation: x-float 2.2s var(--ease-out) forwards; z-index: 2; }
-      @keyframes x-float { to { transform: translateY(-160px) scale(0.94); opacity: 0; filter: blur(6px); } }
-      .x-spark { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: radial-gradient(circle, #f6e3b4, var(--x-gold) 60%, transparent 70%); pointer-events: none; z-index: 3; animation: x-spark 1.8s ease-out forwards; }
-      @keyframes x-spark { 0% { opacity: 0; transform: translate(0, 0) scale(0.4); } 15% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.2); } }
-
-      .x-grid { display: grid; gap: clamp(16px, 2.4vw, 24px); grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); }
-      .x-grid--3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
-      .x-card { position: relative; padding: clamp(22px, 3vw, 32px); background: var(--x-paper); border: 1px solid var(--x-line); transition: transform 300ms var(--ease-out), box-shadow 300ms var(--ease-out); }
-      .x-card::before { content: ""; position: absolute; top: -1px; left: 28px; width: 44px; height: 2px; background: var(--x-gold); }
-      .x-card p { font-size: 15px; line-height: 1.6; color: var(--x-mute); margin-top: 10px; }
-      .x-card .x-btn { margin-top: 20px; }
-      .x-tool-icon { width: 44px; height: 44px; margin-bottom: 16px; color: var(--x-forest); }
-
-      /* navigating */
-      .x-sit { padding: 0; background: rgb(255 253 248 / 0.95); border-color: transparent; color: var(--x-ink); }
-      .x-sit { transition: translate 300ms var(--ease-out), box-shadow 300ms var(--ease-out), opacity 900ms var(--ease-out), transform 900ms var(--ease-out); }
-      .x-sit:hover, .x-sit.is-open { translate: 0 -6px; box-shadow: 0 22px 40px rgb(20 34 26 / 0.28); }
-      .x-sit button { display: block; width: 100%; min-height: var(--tap); padding: 26px 24px 22px; border: 0; background: none; text-align: left; cursor: pointer; color: inherit; font: inherit; }
-      .x-sit button::after { content: "+"; position: absolute; top: 18px; right: 20px; font: 300 26px/1 var(--x-serif); color: var(--x-gold-ink); transition: transform 300ms var(--ease-out); }
-      .x-sit.is-open button::after { transform: rotate(45deg); }
-      .x-sit .x-h3 { font-size: 19px; padding-right: 20px; }
-      .x-sit button p { font-size: 14px; line-height: 1.55; color: var(--x-mute); margin-top: 8px; }
-      .x-sit-more { padding: 0 24px 24px; }
-      .x-sit-more p { margin: 0 0 12px; padding-top: 14px; border-top: 1px solid var(--x-line); font-family: var(--x-serif); font-style: italic; font-size: 18px; line-height: 1.45; color: var(--x-forest); }
-      .x-talk { display: inline-flex; align-items: center; min-height: var(--tap); font: var(--type-tag); letter-spacing: 0.18em; text-transform: uppercase; color: var(--x-forest); text-decoration: underline; text-decoration-color: var(--x-gold); text-underline-offset: 5px; }
-
-      /* services */
-      .x-featured { margin-bottom: clamp(48px, 7vw, 88px); }
-      .x-list { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 7px; }
-      .x-list li { position: relative; padding-left: 18px; font-size: 14.5px; line-height: 1.55; color: var(--x-ink); }
-      .x-list li::before { content: ""; position: absolute; left: 2px; top: 0.62em; width: 5px; height: 5px; border-radius: 50%; background: var(--x-gold); }
-      .x-list li small { display: block; color: var(--x-mute); font-size: 13px; }
-      .x-for { margin-top: 18px !important; padding-top: 14px; border-top: 1px dashed var(--x-line); font-family: var(--x-serif); font-style: italic; font-size: 17px !important; color: var(--x-forest) !important; }
-      .x-for b { font-style: normal; font-family: var(--sans); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; margin-right: 6px; }
-      .x-svc-num { font-family: var(--x-serif); font-size: 15px; color: var(--x-gold-ink); letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
-      .x-concerns { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 20px 0 0; }
-      .x-concerns li { padding: 6px 12px; background: var(--x-cream); border: 1px solid var(--x-line); font: var(--type-tag); letter-spacing: 0.06em; color: var(--x-forest); }
-
-      /* shop */
-      .x-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); gap: 12px; list-style: none; padding: 0; margin: 0; }
-      .x-tiles li { display: flex; align-items: center; justify-content: center; text-align: center; min-height: 96px; padding: 16px; background: var(--x-cream); border: 1px solid var(--x-line); font-family: var(--x-serif); font-size: 18px; line-height: 1.25; color: var(--x-forest); transition: transform 300ms var(--ease-out); }
-      .x-tiles li:hover { transform: translateY(-3px); }
-
-      /* how */
-      .x-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; list-style: none; padding: 0; margin: 0; counter-reset: s; position: relative; }
-      .x-steps::before { content: ""; position: absolute; top: 36px; left: 12%; right: 12%; height: 1px; background: rgb(227 201 154 / 0.7); }
-      .x-steps li { position: relative; text-align: center; }
-      .x-step-num { display: grid; place-items: center; width: 72px; height: 72px; margin: 0 auto 18px; border-radius: 50%; border: 1px solid var(--x-sand); background: rgb(34 56 43 / 0.55); font-family: var(--x-serif); font-size: 30px; color: var(--x-sand); }
-      .x-steps h3 { font-family: var(--x-serif); font-weight: 400; font-size: 21px; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; }
-      .x-steps p { margin-top: 8px; font-size: 14.5px; line-height: 1.55; color: rgb(255 255 255 / 0.9); }
-      @media (max-width: 760px) { .x-steps { grid-template-columns: minmax(0, 1fr); } .x-steps::before { top: 0; bottom: 0; left: 36px; right: auto; width: 1px; height: auto; } .x-steps li { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 18px; text-align: left; align-items: start; } .x-step-num { margin: 0; } }
-
-      /* pricing */
-      .x-price { max-width: 760px; margin: 0 auto; padding: clamp(24px, 4vw, 40px); border: 1.5px dashed var(--x-gold); background: rgb(227 201 154 / 0.1); }
-      .x-price-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 22px; }
-      .x-price-cols > div { padding: 22px; background: var(--x-paper); border: 1px solid var(--x-line); text-align: center; }
-      .x-price-cols .x-ph { margin-top: 12px; font-size: 17px; }
-      @media (max-width: 560px) { .x-price-cols { grid-template-columns: minmax(0, 1fr); } }
-
-      /* blog */
-      .x-post { display: flex; flex-direction: column; }
-      .x-post-art { height: 120px; margin: calc(-1 * clamp(22px, 3vw, 32px)) calc(-1 * clamp(22px, 3vw, 32px)) 22px; background: radial-gradient(circle at 25% 40%, rgb(143 168 146 / 0.55), transparent 60%), radial-gradient(circle at 80% 60%, rgb(227 201 154 / 0.6), transparent 55%), var(--x-cream); background-image: var(--x-flecks), radial-gradient(circle at 25% 40%, rgb(143 168 146 / 0.55), transparent 60%), radial-gradient(circle at 80% 60%, rgb(227 201 154 / 0.6), transparent 55%); }
-      .x-post .x-h3 { font-size: 21px; text-transform: none; letter-spacing: 0.01em; margin-top: 14px; font-weight: 500; }
-
-      /* contact */
-      .x-channels { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 12px; }
-      .x-channels li { display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; border: 1.5px dashed var(--x-gold); background: rgb(227 201 154 / 0.1); }
-      .x-channels b { font: var(--type-tag); letter-spacing: 0.18em; text-transform: uppercase; color: var(--x-forest); }
-      .x-channels i { font-family: var(--x-serif); font-size: 17px; color: #3f4a43; }
-      .x-modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 24px; }
-      @media (max-width: 560px) { .x-modes { grid-template-columns: minmax(0, 1fr); } }
-      .x-testi { margin-top: clamp(36px, 5vw, 56px); padding-top: 28px; border-top: 1px solid var(--x-line); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
-
-      /* footer */
-      .x-foot { position: relative; padding: clamp(48px, 7vw, 80px) clamp(20px, 5vw, 72px) 36px; color: #fff; text-align: center; background: rgb(28 46 36 / 0.5); overflow: hidden; }
-      .x-foot::after { content: ""; position: absolute; inset: 0; background-image: var(--x-flecks); background-size: 380px 260px; pointer-events: none; }
-      .x-foot > * { position: relative; z-index: 1; }
-      .x-foot .x-logo { color: #fff; justify-content: center; font-size: clamp(22px, 3vw, 30px); }
-      .x-foot .x-logo span { color: var(--x-sand); font-size: 1.25em; }
-      .x-foot-line { margin-top: 14px; font-family: var(--x-serif); font-style: italic; font-size: 19px; }
-      .x-foot nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 6px; margin-top: 26px; }
-      .x-foot nav a { display: inline-flex; align-items: center; min-height: var(--tap); padding: 0 12px; font: var(--type-tag); letter-spacing: 0.18em; text-transform: uppercase; color: #fff; text-decoration: none; }
-      .x-foot nav a:hover { color: var(--x-sand); }
-      .x-foot small { display: block; margin-top: 22px; font-size: 12px; letter-spacing: 0.1em; color: rgb(255 255 255 / 0.85); }
-
-      /* modal */
-      .x-modal { width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 32px); padding: clamp(24px, 4vw, 40px); border: 0; background: var(--x-cream); color: var(--x-ink); box-shadow: 0 30px 80px rgb(20 34 26 / 0.4); }
-      .x-modal::backdrop { background: rgb(28 46 36 / 0.6); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
-      .x-modal[open] { animation: x-pop 400ms var(--ease-out); }
-      @keyframes x-pop { from { opacity: 0; transform: translateY(16px); } }
-      .x-close { position: absolute; top: 8px; right: 8px; width: var(--tap); height: var(--tap); border: 0; background: none; font: 300 30px/1 var(--x-serif); color: var(--x-forest); cursor: pointer; }
-      .x-track { position: relative; margin-top: 22px; aspect-ratio: 2 / 1; background: var(--x-paper); border: 1px solid var(--x-line); }
-      .x-track svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-      .x-dot { position: absolute; left: 0; top: 0; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff6df, var(--x-gold) 55%, var(--x-gold-ink)); box-shadow: 0 0 18px 6px rgb(227 201 154 / 0.7); }
-      .x-ground-num { font-family: var(--x-serif); font-weight: 300; font-size: 88px; line-height: 1; color: var(--x-forest); margin-top: 18px; }
-      .x-ground-text { font-family: var(--x-serif); font-size: 24px; color: var(--x-forest); margin-top: 6px; }
-      .x-dots { display: flex; gap: 8px; margin-top: 18px; }
-      .x-dots span { width: 8px; height: 8px; border-radius: 50%; background: var(--x-line); }
-      .x-dots span.is-on { background: var(--x-gold); }
-      .x-emos { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
-      .x-emos button { min-height: var(--tap); padding: 0 18px; border: 1px solid var(--x-line); border-radius: var(--r-pill); background: var(--x-paper); color: var(--x-forest); font: var(--type-label); cursor: pointer; transition: background var(--dur-quick); }
-      .x-emos button:hover { border-color: var(--x-forest); }
-      .x-emos button[aria-pressed="true"] { background: var(--x-forest); color: #fff; border-color: var(--x-forest); }
-      .x-guide { min-height: 3em; margin-top: 20px; font-family: var(--x-serif); font-style: italic; font-size: 20px; line-height: 1.45; color: var(--x-forest); }
-
-      /* reveal */
-      .x-js .x-reveal { opacity: 0; transform: translateY(24px); transition: opacity 900ms var(--ease-out), transform 900ms var(--ease-out); }
-      .x-js .x-reveal.is-in { opacity: 1; transform: none; }
-      @media (prefers-reduced-motion: reduce) {
-        .x-js .x-reveal { transform: none; transition: opacity 400ms linear; }
-        .x-hero::before, .x-flower { animation: none; }
-      }
-    </style>
-  </head>
-  <body>
-    <img class="x-backdrop" src="images/sage-watercolor.png" alt=""/>
-    <div class="x-tint" aria-hidden="true"></div>
-    <div class="x-flower-clip" aria-hidden="true"><img class="x-flower" src="images/yellow-flower.png" alt=""/></div>
-    <div class="page x-page" id="top">
-        <p class="x-announce">Sessions available online &amp; offline</p>
-        <header class="x-nav">
-          <a class="x-logo" href="#top">Therapeutically<span>Yours</span></a>
-          <button class="x-menu" type="button" aria-expanded="false" aria-controls="x-links">Menu</button>
-          <ul class="x-links" id="x-links">
-            <li><a href="#about">About</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#tools">Tools</a></li>
-            <li><a href="#shop">Resources</a></li>
-            <li><a href="#blog">Blog</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li><a class="x-btn" href="#contact">Book a session</a></li>
-          </ul>
-        </header>
-      <main class="main x-col-main">
-        <!-- 1. Hero -->
-        <section class="x-sheet x-hero">
-          <div class="x-split x-split--wide">
-            <div class="x-reveal">
-              <span class="x-script">welcome</span>
-              <h1 class="x-h1">A gentle space for your mind, your work and your life.</h1>
-              <hr class="x-rule"/>
-              <p class="x-lede">Therapy, career guidance and psychology training — grounded in evidence, delivered with warmth.</p>
-              <div class="x-btns">
-                <a class="x-btn" href="#contact">Book your session</a>
-                <a class="x-btn x-btn--ghost" href="#breathe">Start breathing</a>
-              </div>
-            </div>
-            <figure class="x-frame x-reveal">
-              <img src="images/hero.png" alt="A cup of tea beside an open journal by a sunlit window"/>
-            </figure>
-          </div>
-        </section>
-
-        <!-- 2. Overwhelmed band + orb -->
-        <section class="x-band x-center" id="breathe">
-          <p class="x-eyebrow">Pause for a moment</p>
-          <h2 class="x-h2">Are you feeling overwhelmed, stressed or anxious?</h2>
-          <hr class="x-rule"/>
-          <p class="x-body">You don&#39;t have to carry it alone. Start with one slow breath here — then, when you&#39;re ready, find the kind of support that fits you.</p>
-          <div class="x-btns"><a class="x-btn x-btn--sand" href="#services">Explore services</a></div>
-          <div class="x-breath">
-            <div class="x-orb-wrap">
-              <div class="x-orb" id="orb"></div>
-              <p class="x-orb-text" aria-live="polite"><span class="x-orb-word" id="orb-word">Ready</span><span class="x-orb-secs" id="orb-secs">Inhale 4 · Hold 4 · Exhale 6</span></p>
-            </div>
-            <button class="x-btn x-btn--light" type="button" id="orb-btn">Start</button>
-            <p class="x-breath-meta">Cycles completed: <strong id="orb-count">0</strong></p>
-          </div>
-        </section>
-
-        <!-- 3. About -->
-        <section class="x-sheet x-sheet--paper" id="about">
-          <div class="x-split">
-            <figure class="x-frame x-frame--flip x-reveal">
-              <img src="images/therapy-room.png" alt="A calm, softly lit therapy room"/>
-            </figure>
-            <div class="x-reveal">
-              <span class="x-script">Hi, I&#39;m</span>
-              <h2 class="x-h2">Megha</h2>
-              <p class="x-eyebrow" style="margin-top: 12px">Psychologist &amp; founder, Therapeutically Yours</p>
-              <hr class="x-rule"/>
-              <p class="x-body">I offer a compassionate, trauma-informed space where you can slow down and be heard. I work with students, professionals, women, men and older adults — meeting you where you are, at your pace.</p>
-              <ul class="x-tags" aria-label="Approaches">
-                <li>CBT</li>
-                <li>ACT</li>
-                <li>Trauma-Informed Psychosocial Care</li>
-                <li>Grief Therapy</li>
-                <li>Reality Therapy</li>
-                <li>Play Therapy</li>
-              </ul>
-              <p class="x-ph">Education &amp; experience — to be added</p>
-              <div class="x-btns"><a class="x-btn x-btn--ghost" href="#how">More about my approach</a></div>
-            </div>
-          </div>
-        </section>
-        <!-- 4. Toolkit -->
-        <section class="x-sheet" id="tools">
-          <div class="x-head x-center x-reveal">
-            <span class="x-script">a little care</span>
-            <h2 class="x-h2">Your pocket toolkit</h2>
-            <hr class="x-rule"/>
-          </div>
-          <div class="x-checkin x-reveal" id="checkin">
-            <h3 class="x-h3">How are you feeling this moment?</h3>
-            <p class="x-lede" style="margin-top: 8px">Take a breath. There&#39;s no right answer — just notice what&#39;s here.</p>
-            <div class="x-field" id="checkin-field">
-              <label for="feel" class="x-note" style="position: absolute; left: -9999px">Write how you feel</label>
-              <textarea id="feel" maxlength="500" placeholder="Right now I feel…"></textarea>
-              <span class="x-count" id="feel-count" aria-live="polite">0/500</span>
-            </div>
-            <div class="x-checkin-foot">
-              <span class="x-note">Anonymous — nothing is saved</span>
-              <button class="x-btn" type="button" id="release">Let it out to the universe ✨</button>
-            </div>
-            <p class="x-released" id="released" aria-live="polite"></p>
-          </div>
-          <div class="x-grid x-grid--3">
-            <article class="x-card x-reveal">
-              <svg class="x-tool-icon" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M4 22c4-7 10-11 18-11s14 4 18 11c-4 7-10 11-18 11S8 29 4 22Z"></path><circle cx="22" cy="22" r="5"></circle></svg>
-              <h3 class="x-h3">Gain Focus</h3>
-              <p>Follow the dot with your eyes as it glides in a slow figure-eight.</p>
-              <button class="x-btn" type="button" data-tool="focus">Start</button>
-            </article>
-            <article class="x-card x-reveal">
-              <svg class="x-tool-icon" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M22 40V20"></path><path d="M22 26c-8 0-12-5-12-12 8 0 12 5 12 12Zm0-4c0-7 4-12 12-12 0 7-4 12-12 12Z"></path><path d="M12 40h20"></path></svg>
-              <h3 class="x-h3">Calm Anxiety</h3>
-              <p>5-4-3-2-1 grounding — come back to your senses, one step at a time.</p>
-              <button class="x-btn" type="button" data-tool="ground">Start</button>
-            </article>
-            <article class="x-card x-reveal">
-              <svg class="x-tool-icon" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M22 38s-15-8.5-15-19a8 8 0 0 1 15-4 8 8 0 0 1 15 4c0 10.5-15 19-15 19Z"></path></svg>
-              <h3 class="x-h3">Regulate Emotions</h3>
-              <p>Name what you feel. Putting a word to it is the first step to easing it.</p>
-              <button class="x-btn" type="button" data-tool="emotions">Start</button>
-            </article>
-          </div>
-        </section>
-
-        <!-- 5. Navigating -->
-        <section class="x-band" id="navigating">
-          <div class="x-head x-center x-reveal">
-            <p class="x-eyebrow">Wherever you are</p>
-            <h2 class="x-h2">What are you navigating?</h2>
-            <hr class="x-rule"/>
-            <p class="x-body">Tap what feels closest.</p>
-          </div>
-          <div class="x-grid">
-            <article class="x-card x-sit x-reveal"><button type="button" aria-expanded="false"><h3 class="x-h3">Relationship Endings</h3><p>Breaking up, divorce, separation, letting someone go</p></button><div class="x-sit-more" hidden=""><p>Endings can hurt even when they&#39;re right. You don&#39;t have to make sense of it alone.</p><a class="x-talk" href="#contact">Talk to Megha</a></div></article>
-            <article class="x-card x-sit x-reveal"><button type="button" aria-expanded="false"><h3 class="x-h3">Loss &amp; Grief</h3><p>Losing someone, profound change, saying goodbye</p></button><div class="x-sit-more" hidden=""><p>Grief keeps no timetable. There is room here for all of it.</p><a class="x-talk" href="#contact">Talk to Megha</a></div></article>
-            <article class="x-card x-sit x-reveal"><button type="button" aria-expanded="false"><h3 class="x-h3">Career Transitions</h3><p>Job loss, career change, uncertainty</p></button><div class="x-sit-more" hidden=""><p>Uncertainty isn&#39;t failure — it&#39;s where the next step takes shape.</p><a class="x-talk" href="#contact">Talk to Megha</a></div></article>
-            <article class="x-card x-sit x-reveal"><button type="button" aria-expanded="false"><h3 class="x-h3">Identity &amp; Purpose</h3><p>Who am I, what matters, meaning</p></button><div class="x-sit-more" hidden=""><p>Not knowing who you are right now is a beginning, not a flaw.</p><a class="x-talk" href="#contact">Talk to Megha</a></div></article>
-            <article class="x-card x-sit x-reveal"><button type="button" aria-expanded="false"><h3 class="x-h3">Conflict &amp; Tension</h3><p>Unresolved conversations, feeling stuck</p></button><div class="x-sit-more" hidden=""><p>Stuck conversations can loosen. We can find the words together.</p><a class="x-talk" href="#contact">Talk to Megha</a></div></article>
-            <article class="x-card x-sit x-reveal"><button type="button" aria-expanded="false"><h3 class="x-h3">Indecision &amp; Uncertainty</h3><p>Crossroads, multiple paths</p></button><div class="x-sit-more" hidden=""><p>The whole path needn&#39;t be clear today — only the next small step.</p><a class="x-talk" href="#contact">Talk to Megha</a></div></article>
-            <article class="x-card x-sit x-reveal"><button type="button" aria-expanded="false"><h3 class="x-h3">Loneliness &amp; Disconnection</h3><p>Isolated, misunderstood, unseen</p></button><div class="x-sit-more" hidden=""><p>Feeling unseen is painful. Here, you will be heard.</p><a class="x-talk" href="#contact">Talk to Megha</a></div></article>
-            <article class="x-card x-sit x-reveal"><button type="button" aria-expanded="false"><h3 class="x-h3">Life Transitions</h3><p>Marriage, motherhood, relocation, retirement</p></button><div class="x-sit-more" hidden=""><p>Even welcome changes can unsettle you. It&#39;s okay to need support.</p><a class="x-talk" href="#contact">Talk to Megha</a></div></article>
-          </div>
-        </section>
-
-        <!-- 6. Services -->
-        <section class="x-sheet x-sheet--paper" id="services">
-          <div class="x-head x-center x-reveal">
-            <span class="x-script">how I can help</span>
-            <h2 class="x-h2">Services</h2>
-            <hr class="x-rule"/>
-            <p class="x-lede">Nine areas of care, from one-to-one therapy to training the next generation of counsellors.</p>
-          </div>
-          <div class="x-split x-featured">
-            <div class="x-reveal">
-              <p class="x-eyebrow">Featured service</p>
-              <h3 class="x-h2">Individual therapy</h3>
-              <hr class="x-rule"/>
-              <p class="x-body">One-to-one sessions, online or in person, in a space that is entirely yours. Together we make sense of what you&#39;re carrying and build tools that last.</p>
-              <ul class="x-concerns" aria-label="Areas of focus">
-                <li>Anxiety</li><li>Depression</li><li>Trauma</li><li>Stress</li><li>Burnout</li><li>Relationships</li><li>Grief</li><li>Self-esteem</li><li>Life transitions</li>
-              </ul>
-              <div class="x-btns"><a class="x-btn" href="#contact">Book your session</a></div>
-            </div>
-            <figure class="x-frame x-frame--flip x-reveal">
-              <img src="images/wildflowers.png" alt="Wild grasses in a sunlit meadow"/>
-            </figure>
-          </div>
-          <div class="x-grid">
-            <article class="x-card x-reveal">
-              <span class="x-svc-num">01</span>
-              <h3 class="x-h3">Mental Health &amp; Therapy</h3>
-              <ul class="x-list">
-                <li>Individual therapy</li>
-                <li>Group therapy</li>
-                <li>Support groups <small>Women&#39;s, men&#39;s, students, caregivers, grief, parenting</small></li>
-                <li>Psychological assessments <span class="x-soon">coming soon</span></li>
-              </ul>
-              <p class="x-for"><b>For</b>students, adults, couples <span class="x-soon">(coming soon)</span>, older adults</p>
-            </article>
-            <article class="x-card x-reveal">
-              <span class="x-svc-num">02</span>
-              <h3 class="x-h3">Career &amp; Professional Development</h3>
-              <ul class="x-list">
-                <li>Career counselling</li>
-                <li>Resume/CV &amp; ATS optimisation</li>
-                <li>LinkedIn review</li>
-                <li>Cover letters</li>
-                <li>Interview prep <small>HR, behavioural, mock</small></li>
-                <li>Higher education guidance <small>Master&#39;s admissions, SOP review, university selection</small></li>
-                <li>Professional skills coaching</li>
-              </ul>
-              <p class="x-for"><b>For</b>students &amp; professionals</p>
-            </article>
-            <article class="x-card x-reveal">
-              <span class="x-svc-num">03</span>
-              <h3 class="x-h3">Psychology Training &amp; Professional Development</h3>
-              <ul class="x-list">
-                <li>Internships <small>Foundation, advanced, skill labs, case discussions</small></li>
-                <li>Clinical supervision <small>Individual, group, case consultation</small></li>
-                <li>Mentorship</li>
-                <li>Documentation, case conceptualisation, ethics, assessments, report writing</li>
-                <li>Practice support <small>Referral network, crisis consultation, scheduling, documentation review</small></li>
-              </ul>
-              <p class="x-for"><b>For</b>psychology students, trainees, practising counsellors</p>
-            </article>
-            <article class="x-card x-reveal">
-              <span class="x-svc-num">04</span>
-              <h3 class="x-h3">Corporate &amp; Institutional</h3>
-              <ul class="x-list">
-                <li>Employee wellbeing <small>Stress, burnout, work-life integration, resilience</small></li>
-                <li>Professional development workshops <small>Communication, productivity, time management, leadership, team bonding</small></li>
-                <li>Mental health programs <small>Awareness, manager training, psychological safety, EAP</small></li>
-                <li>Campus programs <small>Placement readiness, career planning</small></li>
-              </ul>
-              <p class="x-for"><b>For</b>organisations, colleges &amp; universities</p>
-            </article>
-            <article class="x-card x-reveal">
-              <span class="x-svc-num">05</span>
-              <h3 class="x-h3">Women&#39;s Wellness</h3>
-              <ul class="x-list">
-                <li>Therapy</li>
-                <li>Coaching <small>Confidence, boundaries, identity</small></li>
-                <li>PCOS/PCOD support &amp; lifestyle change</li>
-                <li>Life transition support <small>Marriage, motherhood, relocation, divorce, bereavement</small></li>
-                <li>Women&#39;s support groups</li>
-              </ul>
-            </article>
-            <article class="x-card x-reveal">
-              <span class="x-svc-num">06</span>
-              <h3 class="x-h3">Men&#39;s Mental Health</h3>
-              <ul class="x-list">
-                <li>Therapy</li>
-                <li>Career &amp; emotional-growth coaching</li>
-                <li>Emotional awareness, attunement, empathy &amp; communication</li>
-                <li>Men&#39;s circles</li>
-              </ul>
-            </article>
-            <article class="x-card x-reveal">
-              <span class="x-svc-num">07</span>
-              <h3 class="x-h3">Healthy Ageing</h3>
-              <ul class="x-list">
-                <li>Individual therapy</li>
-                <li>Adjustment &amp; transition <small>Retirement, loss, empty nest, chronic illness</small></li>
-                <li>Community wellbeing <small>Social connection, purpose</small></li>
-              </ul>
-            </article>
-            <article class="x-card x-reveal">
-              <span class="x-svc-num">08</span>
-              <h3 class="x-h3">Workshops, Community &amp; Outreach</h3>
-              <ul class="x-list">
-                <li>Public &amp; creative workshops <small>Art therapy, expressive arts</small></li>
-                <li>Reading circles</li>
-                <li>NGO &amp; school programs</li>
-                <li>Festival-based events</li>
-              </ul>
-            </article>
-            <article class="x-card x-reveal">
-              <span class="x-svc-num">09</span>
-              <h3 class="x-h3">Learning Resources</h3>
-              <ul class="x-list">
-                <li>CUET UG <small>Revision notes, detailed notes &amp; PYQs</small></li>
-                <li>Therapy worksheets, journals &amp; guides</li>
-                <li>Professional templates &amp; intake forms</li>
-                <li>Recorded courses <span class="x-soon">coming soon</span></li>
-              </ul>
-            </article>
-          </div>
-          <div class="x-btns x-center" style="justify-content: center; margin-top: 48px"><a class="x-btn x-btn--sand" href="#contact">Book a free exploration call</a></div>
-        </section>
-        <!-- 7. Shop -->
-        <section class="x-sheet" id="shop">
-          <div class="x-head x-center x-reveal">
-            <span class="x-script">for everyday care</span>
-            <h2 class="x-h2">Printables &amp; Shop</h2>
-            <hr class="x-rule"/>
-            <p><span class="x-badge">Coming soon</span></p>
-          </div>
-          <ul class="x-tiles x-reveal">
-            <li>Journals</li>
-            <li>Emotional expression journal with prompts</li>
-            <li>Anxiety workbook</li>
-            <li>Mindfulness, burnout &amp; self-esteem worksheets</li>
-            <li>Planners &amp; diaries</li>
-            <li>Cards</li>
-            <li>Stickers</li>
-            <li>Desk standees</li>
-            <li>Tote bags</li>
-            <li>Candles</li>
-          </ul>
-          <div class="x-btns" style="justify-content: center; margin-top: 40px"><a class="x-btn x-btn--ghost" href="#contact">Notify me</a></div>
-        </section>
-
-        <!-- 8. How it works -->
-        <section class="x-band" id="how">
-          <div class="x-head x-center x-reveal">
-            <p class="x-eyebrow">Simple and unhurried</p>
-            <h2 class="x-h2">How it works</h2>
-            <hr class="x-rule"/>
-          </div>
-          <ol class="x-steps x-reveal">
-            <li><span class="x-step-num">1</span><div><h3>Book online</h3><p>Choose a time, online or in person.</p></div></li>
-            <li><span class="x-step-num">2</span><div><h3>Intake &amp; consent</h3><p>A short form so we start on the right foot.</p></div></li>
-            <li><span class="x-step-num">3</span><div><h3>Your sessions</h3><p>1:1 packages or group programs.</p></div></li>
-            <li><span class="x-step-num">4</span><div><h3>Ongoing support</h3><p>Resources and tools between sessions.</p></div></li>
-          </ol>
-        </section>
-
-        <!-- 9. Pricing -->
-        <section class="x-sheet x-sheet--paper" id="pricing">
-          <div class="x-head x-center x-reveal">
-            <span class="x-script">investment</span>
-            <h2 class="x-h2">Session fees</h2>
-            <hr class="x-rule"/>
-          </div>
-          <div class="x-price x-center x-reveal">
-            <span class="x-badge">Placeholder</span>
-            <p class="x-ph" style="border: 0; background: none; margin-top: 10px">Session fees — to be added</p>
-            <div class="x-price-cols">
-              <div><h3 class="x-h3">Online</h3><span class="x-ph">Fee — to be added</span></div>
-              <div><h3 class="x-h3">Offline</h3><span class="x-ph">Fee — to be added</span></div>
-            </div>
-          </div>
-        </section>
-
-        <!-- 10. Blog -->
-        <section class="x-sheet" id="blog">
-          <div class="x-head x-center x-reveal">
-            <span class="x-script">from the journal</span>
-            <h2 class="x-h2">Blog</h2>
-            <hr class="x-rule"/>
-          </div>
-          <div class="x-grid x-grid--3">
-            <article class="x-card x-post x-reveal"><div class="x-post-art" aria-hidden="true"></div><span class="x-badge" style="align-self: flex-start">Coming soon</span><h3 class="x-h3">What is stress, exactly?</h3></article>
-            <article class="x-card x-post x-reveal"><div class="x-post-art" aria-hidden="true"></div><span class="x-badge" style="align-self: flex-start">Coming soon</span><h3 class="x-h3">Why do I keep procrastinating till the last moment?</h3></article>
-            <article class="x-card x-post x-reveal"><div class="x-post-art" aria-hidden="true"></div><span class="x-badge" style="align-self: flex-start">Coming soon</span><h3 class="x-h3">What can I talk about with my therapist if I don&#39;t have a &#39;disorder&#39;?</h3></article>
-          </div>
-        </section>
-
-        <!-- 11. Contact -->
-        <section class="x-sheet x-sheet--paper" id="contact">
-          <div class="x-head x-center x-reveal">
-            <span class="x-script">let&#39;s begin</span>
-            <h2 class="x-h2">Book your session</h2>
-            <hr class="x-rule"/>
-            <p class="x-lede">Choose what suits you — from home, or in the room.</p>
-          </div>
-          <div class="x-modes x-reveal">
-            <article class="x-card"><h3 class="x-h3">Online</h3><p>Video sessions from wherever you feel comfortable.</p></article>
-            <article class="x-card"><h3 class="x-h3">Offline</h3><p>In-person sessions in a calm, private room.</p></article>
-          </div>
-          <ul class="x-channels x-reveal">
-            <li><b>Booking link</b><i>to be added</i></li>
-            <li><b>WhatsApp</b><i>to be added</i></li>
-            <li><b>Email</b><i>to be added</i></li>
-            <li><b>Instagram</b><i>to be added</i></li>
-            <li><b>LinkedIn</b><i>to be added</i></li>
-            <li><b>YouTube</b><i>to be added</i></li>
-          </ul>
-          <div class="x-testi x-reveal">
-            <div><h3 class="x-h3">Worked with Megha?</h3><p class="x-body" style="margin-top: 6px">Your words help someone else take the first step.</p></div>
-            <a class="x-btn x-btn--sand" href="https://forms.gle/zD5XLadDqurr4RUg7" rel="noopener" target="_blank">Share your experience</a>
-          </div>
-        </section>
-      </main>
-
-      <!-- 12. Footer -->
-      <footer class="x-foot">
-        <a class="x-logo" href="#top">Therapeutically<span>Yours</span></a>
-        <p class="x-foot-line">Your identity always remains anonymous while using the toolkit.</p>
-        <nav aria-label="Footer">
-          <a href="#about">About</a><a href="#services">Services</a><a href="#tools">Tools</a><a href="#shop">Resources</a><a href="#blog">Blog</a><a href="#contact">Contact</a>
-        </nav>
-        <small>Therapeutically Yours by Megha Gupta · Preview draft for approval</small>
-      </footer>
+<div class="urgent" id="urgent" role="dialog" aria-modal="true" aria-labelledby="urgent-title" hidden>
+  <div class="urgent__box">
+    <button class="urgent__close" type="button" data-urgent-close aria-label="Close">×</button>
+    <h2 id="urgent-title">You are not alone.</h2>
+    <p>If you're in danger or thinking of ending your life, please reach out now.</p>
+    <div class="urgent__lines">
+      <a href="tel:14416"><span>Tele-MANAS<br /><span class="small muted">Govt. of India · free · 24x7 · many languages</span></span><strong>14416</strong></a>
+      <a href="tel:18008914416"><span>Tele-MANAS toll-free</span><strong>1-800-891-4416</strong></a>
+      <a href="tel:112"><span>Emergency</span><strong>112</strong></a>
     </div>
+    <p class="small muted">Support on this site is not a substitute for emergency care.</p>
+  </div>
+</div>
+<button class="fab" type="button" data-urgent aria-haspopup="dialog">Urgent help</button>
 
-    <dialog class="x-modal" id="tool-modal" aria-labelledby="modal-title">
-      <button class="x-close" type="button" aria-label="Close" data-close="">×</button>
-      <div data-panel="focus" hidden="">
-        <p class="x-eyebrow">Gain Focus</p>
-        <h3 class="x-h3" id="modal-title-focus">Follow the dot with your eyes</h3>
-        <p class="x-body" style="margin-top: 8px">Keep your head still. Let your breath slow as your gaze follows.</p>
-        <div class="x-track" id="track">
-          <svg viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden="true"><polyline id="track-path" fill="none" stroke="rgb(201 165 100 / 0.5)" stroke-width="0.6" stroke-dasharray="2 3" vector-effect="non-scaling-stroke"></polyline></svg>
-          <span class="x-dot" id="focus-dot"></span>
-        </div>
-      </div>
-      <div data-panel="ground" hidden="">
-        <p class="x-eyebrow">Calm Anxiety · 5-4-3-2-1</p>
-        <h3 class="x-h3" id="modal-title-ground">Come back to your senses</h3>
-        <div aria-live="polite"><p class="x-ground-num" id="g-num">5</p><p class="x-ground-text" id="g-text">things you can see</p></div>
-        <div class="x-dots" id="g-dots"><span></span><span></span><span></span><span></span><span></span></div>
-        <div class="x-btns"><button class="x-btn x-btn--ghost" type="button" id="g-back">Back</button><button class="x-btn" type="button" id="g-next">Next</button></div>
-      </div>
-      <div data-panel="emotions" hidden="">
-        <p class="x-eyebrow">Regulate Emotions</p>
-        <h3 class="x-h3" id="modal-title-emotions">Name what you feel</h3>
-        <div class="x-emos" id="emos"></div>
-        <p class="x-guide" id="guide" aria-live="polite">Tap the word closest to right now.</p>
-      </div>
-    </dialog>
+<header class="hdr">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Therapeutically Yours, home">
+      <svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#D9E6E3"/><path d="M20 31V18" stroke="#3D6B6E" stroke-width="2" stroke-linecap="round"/><path d="M20 21c0-5-4-8-9-8 0 5 4 8 9 8Z" fill="#86A8A4"/><path d="M20 18c0-5 3.5-8 8.5-8 0 5-3.5 8-8.5 8Z" fill="#3D6B6E"/><path d="M13 31h14" stroke="#86A8A4" stroke-width="2" stroke-linecap="round"/></svg>
+      Therapeutically Yours
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Menu">
+      <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h14M3 14h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="#megha">About</a>
+      <a href="#rituals">Rituals</a>
+      <a href="#services">Services</a>
+      <a href="#fees">Fees</a>
+      <a href="#contact">Contact</a>
+      <a class="btn" href="#contact">Book a session</a>
+    </nav>
+  </div>
+</header>
 
-    <script>/* Page behaviors for Hark's component library: the nav, the theme toggle, tables, line charts and images. style-gates: data */
+<main id="main">
+<section class="hero" id="top">
+  <img class="hero__img" src="oasis-hero.jpg" alt="" />
+  <div class="wrap">
+    <p class="eyebrow">Therapeutically Yours by Megha Gupta</p>
+    <h1>You don't have to have the words yet.</h1>
+    <p class="lead">A gentle space for your mind, your work and your life. Start wherever you are.</p>
+    <div class="doors">
+      <a class="door" href="#rituals" data-ritual="sigh"><strong>I need calm right now</strong><span>About 60 seconds</span><i>Begin gently →</i></a>
+      <a class="door" href="#still"><strong>I want to understand what I'm feeling</strong><span>Sort through what's swirling</span><i>Take a look →</i></a>
+      <a class="door" href="#megha"><strong>I'm ready to talk to someone</strong><span>Meet Megha first</span><i>Say hello →</i></a>
+    </div>
+    <p class="small muted">Everything you do here stays on your device. No sign-up.</p>
+  </div>
+</section>
+
+<!-- STEP 2 TOOL: "Still" feelings-sorting tool goes inside this section -->
+<section class="sec" id="still" aria-labelledby="still-title">
+  <div class="wrap">
+    <p class="eyebrow">Understand</p>
+    <h2 id="still-title">Let's gather what's scattered.</h2>
+    <p class="lead">Tap the feelings that are here right now. As you name them, watch them settle.</p>
+    <style>
+    .x-panel{--stir:1;position:relative;height:420px;border-radius:var(--r);overflow:hidden;background:linear-gradient(var(--surface),var(--bg));border:var(--line);margin-top:28px}
+    .pebble{position:absolute;min-height:44px;padding:.5em 1.2em;border:0;border-radius:999px;font:500 .95rem var(--sans);color:var(--text);cursor:pointer;box-shadow:var(--shadow);animation:x-float var(--d,10s) ease-in-out infinite alternate;transition:top 2s var(--ease),opacity 2s var(--ease),transform 2s var(--ease)}
+    .pebble[data-c="0"]{background:var(--mist)}.pebble[data-c="1"]{background:var(--deco)}.pebble[data-c="2"]{background:var(--sand)}
+    .pebble.is-named{top:84%!important;opacity:0;pointer-events:none}
+    @keyframes x-float{from{transform:translate(0,0)}50%{transform:translate(14px,-10px)}to{transform:translate(-10px,8px)}}
+    .x-pool{position:absolute;left:0;right:0;bottom:0;height:80px;background:linear-gradient(rgba(134,168,164,0),var(--deco) 45%,var(--cta));overflow:hidden}
+    .x-pool::after{content:"";position:absolute;inset:0;background:rgba(247,246,241,.55);opacity:calc(var(--stir)*.8);transition:opacity 2s var(--ease)}
+    .x-pool i{position:absolute;left:var(--x);top:55%;width:60px;height:18px;margin:-9px 0 0 -30px;border:1.5px solid rgba(255,255,255,.7);border-radius:50%;animation:x-ripple calc(2.4s / var(--stir)) ease-out infinite}
+    .x-pool i:nth-child(2){animation-delay:-.8s}.x-pool i:nth-child(3){animation-delay:-1.6s}
+    @keyframes x-ripple{from{transform:scale(.3);opacity:.9}to{transform:scale(2.4);opacity:0}}
+    .x-add{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .x-add input{min-height:48px;padding:0 18px;border:var(--line);border-radius:999px;background:var(--bg);font:400 1rem var(--sans);color:var(--text);flex:1 1 200px;max-width:320px}
+    .x-result{margin-top:28px}.x-result[hidden]{display:none}
+    .x-result .links{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:8px}.x-result .links a{display:inline-flex;align-items:center;min-height:44px}
+    @media(max-width:600px){.x-panel{height:320px}.pebble{font-size:.85rem;padding:.45em 1em}}
+    @media(prefers-reduced-motion:reduce){.x-panel{height:auto;display:flex;flex-wrap:wrap;gap:10px;padding:24px}.pebble{position:static}.pebble.is-named{opacity:.25}.x-pool{display:none}}
+    </style>
+    <div class="x-panel" id="x-panel" role="group" aria-label="Feelings to name">
+      <div class="x-pool" aria-hidden="true"><i style="--x:25%"></i><i style="--x:55%"></i><i style="--x:80%"></i></div>
+    </div>
+    <form class="x-add" id="x-add"><input id="x-new" type="text" placeholder="Something else…" aria-label="Name another feeling" maxlength="30" /><button class="btn btn--ghost" type="submit">Add</button></form>
+    <div class="card x-result" id="x-result" aria-live="polite" hidden>
+      <p><strong>You named: <span id="x-list"></span>.</strong> Naming a feeling can make it a little softer. Psychologists call this affect labelling.</p>
+      <p>A small ritual that may help: <strong id="x-ritual"></strong></p>
+      <div class="links"><button class="btn" type="button" id="x-try">Try it</button><button class="btn btn--ghost" type="button" id="x-save">Save to my note for Megha</button><a href="#megha">Talk to Megha</a></div>
+    </div>
+    <div class="next"><p>When you're ready, try something small.</p><a class="btn btn--ghost" href="#rituals">See the rituals</a></div>
+  </div>
+</section>
+
+<!-- STEP 2 TOOL: rituals go inside this section -->
+<section class="sec sec--tint" id="rituals" aria-labelledby="rituals-title">
+  <div class="wrap">
+    <p class="eyebrow">Calm</p>
+    <h2 id="rituals-title">Small rituals for heavy moments</h2>
+    <p class="lead">Each one takes a few minutes. Each one ends with a next step.</p>
+    <style>
+    .x-rit{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;font:inherit;color:var(--text);cursor:pointer;transition:transform .6s var(--ease)}
+    .x-rit:hover{transform:translateY(-3px)}
+    .x-rit strong{font-family:var(--serif);font-weight:400;font-size:1.25rem;line-height:1.3}
+    .x-rit>span:last-child{color:var(--muted);font-size:.95rem}
+    .x-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.9rem;color:var(--muted)}
+    .x-meta b{background:var(--sand);color:var(--text);padding:.2em .8em;border-radius:999px;font-weight:500;font-size:.85rem}
+    .x-note{margin-top:20px}
+    .x-modal{position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;padding:72px 20px 32px;background:linear-gradient(var(--mist),var(--bg));overflow:auto}
+    .x-modal[hidden]{display:none}
+    .x-modal>img{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+    .x-modal.is-dark{color:#fff;background:var(--foot)}
+    .x-modal.is-dark>img{display:block;filter:brightness(.4)}
+    .x-stream{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+    .x-leaf{position:absolute;left:0;padding:.7em 1.6em;max-width:260px;background:var(--deco);color:var(--foot);border-radius:0 70% 0 70%/0 100% 0 100%;font-size:.95rem;animation:x-drift 12s linear forwards}
+    @keyframes x-drift{0%{transform:translateX(-110%);opacity:0}10%,70%{opacity:1}100%{transform:translate(100vw,24px);opacity:0}}
+    .x-m-box{position:relative;z-index:2;width:100%;max-width:620px;text-align:center}
+    .x-m-box h2:focus{outline:none}
+    .x-m-close{position:fixed;top:16px;right:16px;z-index:3;width:44px;height:44px;border-radius:50%;border:var(--line);background:var(--surface);font-size:1.4rem;cursor:pointer;color:var(--text)}
+    .x-m-text{font-family:var(--serif);font-weight:300;font-size:clamp(1.25rem,3vw,1.6rem);line-height:1.4;margin:0 auto .6em}
+    .x-tool{display:flex;flex-direction:column;align-items:center;gap:12px;margin:12px 0 20px}.x-tool p{margin:0}
+    .x-tool input{min-height:48px;padding:0 18px;border:var(--line);border-radius:999px;background:var(--bg);font:400 1rem var(--sans);color:var(--text);width:100%;max-width:360px}
+    .x-tool .x-add{justify-content:center;width:100%}
+    .x-orb{width:140px;height:140px;margin:48px;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--bg),var(--deco));transition:transform var(--d,1s) ease-in-out}
+    .x-big{font-family:var(--serif);font-weight:300;font-size:2.2rem;line-height:1.2}
+    .x-pulse{display:flex;gap:96px;margin:24px 0}.x-pulse i{width:32px;height:32px;border-radius:50%;background:var(--deco);opacity:.25;transition:opacity .4s,transform .4s}.x-pulse i.on{opacity:1;transform:scale(1.3)}
+    .x-feel{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}.x-feel [aria-pressed=true]{background:var(--cta);color:#fff}
+    .x-out{display:flex;flex-direction:column;align-items:center;gap:12px}.x-out:not(:empty){margin-top:16px}
+    .x-why{max-width:520px;margin:16px auto 0;text-align:left;border-top:var(--line)}.x-why summary{padding:10px 0;font-weight:500}.x-why p{font-size:.95rem;opacity:.85}
+    .x-caution{font-size:.9rem;margin:12px auto 0}
+    .x-m-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:24px}
+    .x-dots{display:flex;gap:8px;list-style:none;padding:0;margin:0}.x-dots li{width:8px;height:8px;border-radius:50%;background:var(--deco);opacity:.35}.x-dots .done{opacity:.8}.x-dots .on{opacity:1;background:var(--cta)}
+    .is-dark .eyebrow,.is-dark .muted{color:rgba(255,255,255,.82)}.is-dark a,.is-dark details summary::after{color:#fff}
+    .is-dark .btn--ghost{color:#fff;border-color:rgba(255,255,255,.8)}.is-dark .btn--ghost:hover{background:rgba(255,255,255,.14)}.is-dark .x-why{border-color:rgba(255,255,255,.25)}
+    .x-review{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;width:100%;text-align:left}
+    .x-review div{background:var(--bg);border:var(--line);border-radius:var(--r);padding:16px}.x-review p{font-size:.95rem}.x-review .eyebrow{margin-bottom:.5em}
+    .x-choice{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+    .x-own{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;width:100%}
+    .x-heart{width:120px;height:120px;margin:16px;color:var(--sand);animation:x-glow 5s ease-in-out infinite}
+    @keyframes x-glow{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(216,191,142,0))}50%{transform:scale(1.07);filter:drop-shadow(0 0 18px var(--sand))}}
+    .x-bloom{width:170px;height:170px}.x-bloom .p{transform-box:view-box;transform-origin:85px 85px;animation:x-petal 2.6s var(--ease) both}
+    @keyframes x-petal{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+    .x-list{text-align:left;max-width:460px;margin:0;padding-left:1.2em}
+    .x-worry{margin-bottom:32px;display:flex;flex-direction:column;align-items:flex-start;gap:12px}.x-worry p{margin:0;font-family:var(--serif);font-size:1.2rem}
+    .x-worry .x-choice{justify-content:flex-start}
+    </style>
+    <div class="grid">
+      <button type="button" class="card x-rit" data-ritual="sigh" aria-haspopup="dialog"><strong>Physiological sigh</strong><span class="x-meta">1 min <b>Breathwork</b></span><span>Two breaths in, one long breath out.</span></button>
+      <button type="button" class="card x-rit" data-ritual="ground" aria-haspopup="dialog"><strong>5-4-3-2-1 grounding</strong><span class="x-meta">2 min <b>Mindfulness</b></span><span>Come back to the room through your senses.</span></button>
+      <button type="button" class="card x-rit" data-ritual="butterfly" aria-haspopup="dialog"><strong>Butterfly hug</strong><span class="x-meta">2 min <b>EMDR-informed</b></span><span>A slow, steady tap to settle your body.</span></button>
+      <button type="button" class="card x-rit" data-ritual="tipp" aria-haspopup="dialog"><strong>TIPP for overwhelm</strong><span class="x-meta">3 min <b>DBT</b></span><span>Four quick ways to turn the intensity down.</span></button>
+      <button type="button" class="card x-rit" data-ritual="leaves" aria-haspopup="dialog"><strong>Leaves on a stream</strong><span class="x-meta">4 min <b>ACT</b></span><span>Let thoughts drift by without holding on.</span></button>
+      <button type="button" class="card x-rit" data-ritual="reframe" aria-haspopup="dialog"><strong>Gentle thought reframe</strong><span class="x-meta">5 min <b>CBT</b></span><span>Find a kinder, truer way to see it.</span></button>
+      <button type="button" class="card x-rit" data-ritual="compassion" aria-haspopup="dialog"><strong>Self-compassion break</strong><span class="x-meta">2 min <b>Kristin Neff</b></span><span>Speak to yourself as you would to a friend.</span></button>
+      <button type="button" class="card x-rit" data-ritual="worry" aria-haspopup="dialog"><strong>Worry window</strong><span class="x-meta">2 min <b>CBT</b></span><span>Give worries a set time, then set them down.</span></button>
+      <button type="button" class="card x-rit" data-ritual="tiny" aria-haspopup="dialog"><strong>One tiny step</strong><span class="x-meta">1 min <b>Behavioural activation</b></span><span>Pick one small thing and do just that.</span></button>
+      <button type="button" class="card x-rit" data-ritual="good" aria-haspopup="dialog"><strong>Three good things</strong><span class="x-meta">3 min <b>Positive psychology</b></span><span>Notice what went right today.</span></button>
+    </div>
+    <p class="small muted x-note">These are self-care practices, not a replacement for therapy or emergency care.</p>
+    <div class="x-modal" id="x-modal" role="dialog" aria-modal="true" aria-labelledby="x-m-title" hidden>
+      <img src="oasis-stream.jpg" alt="" />
+      <div class="x-stream" aria-hidden="true"></div>
+      <button class="x-m-close" type="button" aria-label="Close">×</button>
+      <div class="x-m-box">
+        <p class="eyebrow" id="x-m-step"></p>
+        <h2 id="x-m-title" tabindex="-1"></h2>
+        <p class="x-m-text" id="x-m-text" aria-live="polite"></p>
+        <div class="x-tool" id="x-m-tool"></div>
+        <div class="x-m-nav"><button class="btn btn--ghost" type="button" id="x-m-back">Back</button><ol class="x-dots" id="x-m-dots" aria-hidden="true"></ol><button class="btn" type="button" id="x-m-next">Next</button></div>
+        <details class="x-why" id="x-m-why"><summary>Why this works</summary><p></p></details>
+        <p class="x-caution muted" id="x-m-caution"></p>
+      </div>
+    </div>
+    <div class="next"><p>Something a little longer lasting?</p><a class="btn btn--ghost" href="#seed">Plant a thread of hope</a></div>
+  </div>
+</section>
+
+<!-- STEP 3 TOOL: "Seed" hope thread goes inside this section -->
+<section class="sec" id="seed" aria-labelledby="seed-title">
+  <div class="wrap">
+    <p class="eyebrow">Hope</p>
+    <h2 id="seed-title">A thread of hope</h2>
+    <div class="tool-slot" data-tool="seed"></div>
+    <div class="next"><p>Hear from people who've walked this way.</p><a class="btn btn--ghost" href="#rain">After the rain</a></div>
+  </div>
+</section>
+
+<section class="rain" id="rain" aria-labelledby="rain-title">
+  <img src="oasis-stream.jpg" alt="" />
+  <div class="wrap">
+    <p class="eyebrow">After the rain</p>
+    <h2 id="rain-title">What people carry with them</h2>
+    <div class="quotes" aria-live="off" id="quotes">
+      <blockquote class="quote on">"I came in thinking I was broken. I left knowing I was tired."</blockquote>
+      <blockquote class="quote">"For the first time, I didn't have to explain myself twice."</blockquote>
+      <blockquote class="quote">"Small steps. That's what changed everything."</blockquote>
+    </div>
+    <button class="btn btn--ghost" type="button" id="quote-toggle" aria-pressed="false">Pause</button>
+    <p class="small muted" style="margin-top:20px">Sample lines, to be replaced with real, consented words.</p>
+    <div class="next"><a href="https://forms.gle/zD5XLadDqurr4RUg7" target="_blank" rel="noopener">Worked with Megha? Share your experience</a><a class="btn" href="#megha">Meet Megha</a></div>
+  </div>
+</section>
+
+<section class="sec" id="megha" aria-labelledby="megha-title">
+  <div class="wrap meet">
+    <img class="reveal" src="oasis-room.jpg" alt="Megha's quiet, softly lit therapy room" />
+    <div class="reveal">
+      <p class="eyebrow">Psychologist &amp; founder</p>
+      <h2 id="megha-title">Hi, I'm Megha.</h2>
+      <p>I offer a compassionate, trauma-informed space where you can slow down and be heard. I work with students, professionals, women, men and older adults, meeting you where you are, at your pace.</p>
+      <ul class="chips" aria-label="Approaches">
+        <li>CBT</li><li>ACT</li><li>Trauma-Informed Psychosocial Care</li><li>Grief Therapy</li><li>Reality Therapy</li><li>Play Therapy</li>
+      </ul>
+      <div class="stack">
+        <div class="placeholder">Education &amp; experience: to be added</div>
+        <div class="placeholder">A 30-second hello from Megha: coming soon</div>
+      </div>
+      <h3>What a first session feels like</h3>
+      <ol class="first">
+        <li>A free 15-min call, no commitment.</li>
+        <li>You share only what you're ready to.</li>
+        <li>We agree on what you'd like to feel different.</li>
+        <li>You leave with one small thing to try.</li>
+      </ol>
+      <div class="next"><a class="btn" href="#contact">Book a free 15-min call</a><a href="#navigating">See what we can work on</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--tint" id="navigating" aria-labelledby="nav-title">
+  <div class="wrap">
+    <p class="eyebrow">You're not the only one</p>
+    <h2 id="nav-title">What are you navigating?</h2>
+    <p class="lead">Open whichever feels closest. There's no wrong door.</p>
+    <div class="grid" style="align-items:start;margin-top:32px">
+      <details class="nav-card"><summary>Relationship endings</summary><div class="body"><p>Endings can hurt even when they're right.</p><a class="btn btn--ghost" href="#contact">Talk to Megha</a></div></details>
+      <details class="nav-card"><summary>Loss &amp; grief</summary><div class="body"><p>Grief keeps no timetable. There is room here for all of it.</p><a class="btn btn--ghost" href="#contact">Talk to Megha</a></div></details>
+      <details class="nav-card"><summary>Career transitions</summary><div class="body"><p>Uncertainty isn't failure; it's where the next step takes shape.</p><a class="btn btn--ghost" href="#contact">Talk to Megha</a></div></details>
+      <details class="nav-card"><summary>Burnout &amp; work stress</summary><div class="body"><p>Being exhausted isn't a character flaw.</p><a class="btn btn--ghost" href="#contact">Talk to Megha</a></div></details>
+      <details class="nav-card"><summary>Identity &amp; purpose</summary><div class="body"><p>Not knowing who you are right now is a beginning.</p><a class="btn btn--ghost" href="#contact">Talk to Megha</a></div></details>
+      <details class="nav-card"><summary>Exam &amp; student pressure</summary><div class="body"><p>Your worth is bigger than one result.</p><a class="btn btn--ghost" href="#contact">Talk to Megha</a></div></details>
+      <details class="nav-card"><summary>Loneliness</summary><div class="body"><p>Feeling unseen is painful. Here, you will be heard.</p><a class="btn btn--ghost" href="#contact">Talk to Megha</a></div></details>
+      <details class="nav-card"><summary>Life transitions: marriage, motherhood, relocation, retirement</summary><div class="body"><p>Even welcome changes can unsettle you.</p><a class="btn btn--ghost" href="#contact">Talk to Megha</a></div></details>
+    </div>
+    <div class="next"><p>Not sure it fits a box? That's fine too.</p><a href="#services">See how I can help</a></div>
+  </div>
+</section>
+
+<section class="sec" id="services" aria-labelledby="svc-title">
+  <div class="wrap">
+    <p class="eyebrow">Services</p>
+    <h2 id="svc-title">How I can help</h2>
+    <p class="lead">Every path starts the same way: a free 15-minute call.</p>
+    <div class="grid" style="margin-top:32px">
+      <article class="card svc reveal">
+        <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M18 30s-11-6.5-11-14a6 6 0 0 1 11-3.3A6 6 0 0 1 29 16c0 7.5-11 14-11 14Z"/></svg>
+        <h3>Therapy</h3>
+        <ul><li>Individual therapy</li><li>Group therapy and support groups</li><li>Online &amp; in person</li></ul>
+        <a class="btn btn--ghost" href="#contact">Book a free 15-min call</a>
+      </article>
+      <article class="card svc reveal">
+        <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 29h24M10 29V17l8-6 8 6v12M15 29v-6h6v6"/></svg>
+        <h3>Career guidance</h3>
+        <ul><li>Career counselling</li><li>CV/ATS &amp; LinkedIn review</li><li>Interview prep</li><li>Higher-education and SOP guidance</li><li>CUET UG notes &amp; PYQs</li></ul>
+        <a class="btn btn--ghost" href="#contact">Book a free 15-min call</a>
+      </article>
+      <article class="card svc reveal">
+        <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 14l14-7 14 7-14 7-14-7Z"/><path d="M10 17v7c0 2 4 4 8 4s8-2 8-4v-7"/></svg>
+        <h3>Training &amp; supervision</h3>
+        <ul><li>Internships</li><li>Clinical supervision</li><li>Mentorship</li><li>Practice support for students and counsellors</li></ul>
+        <a class="btn btn--ghost" href="#contact">Book a free 15-min call</a>
+      </article>
+      <article class="card svc reveal">
+        <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="13" r="4"/><circle cx="24" cy="13" r="4"/><path d="M5 28c0-4 3-7 7-7s7 3 7 7M17 28c0-4 3-7 7-7s7 3 7 7"/></svg>
+        <h3>Corporate &amp; campus wellbeing</h3>
+        <ul><li>Stress and burnout</li><li>Communication and time management</li><li>Team bonding</li><li>Manager training</li></ul>
+        <a class="btn btn--ghost" href="#contact">Book a free 15-min call</a>
+      </article>
+      <article class="card svc reveal">
+        <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M18 30c-6 0-10-5-10-11 4 0 8 2 10 6 2-4 6-6 10-6 0 6-4 11-10 11Z"/><path d="M18 25c0-6 0-12-4-17 4 2 6 5 6 9"/></svg>
+        <h3>Women's wellness</h3>
+        <ul><li>Coaching</li><li>PCOS/PCOD lifestyle support</li><li>Life transitions</li><li>Support groups</li></ul>
+        <a class="btn btn--ghost" href="#contact">Book a free 15-min call</a>
+      </article>
+      <article class="card svc reveal">
+        <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="18" cy="18" r="11"/><path d="M13 20c1.5 2 3 3 5 3s3.5-1 5-3"/></svg>
+        <h3>Men's mental health</h3>
+        <ul><li>Emotional attunement</li><li>Empathy and communication</li><li>Men's circles</li></ul>
+        <a class="btn btn--ghost" href="#contact">Book a free 15-min call</a>
+      </article>
+      <article class="card svc reveal">
+        <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M18 31V15"/><path d="M18 18c-6 0-9-4-9-9 6 0 9 4 9 9ZM18 15c5 0 8-3 8-8-5 0-8 3-8 8Z"/></svg>
+        <h3>Healthy ageing</h3>
+        <ul><li>Finding new meaning</li><li>Loss and change</li><li>Community</li></ul>
+        <a class="btn btn--ghost" href="#contact">Book a free 15-min call</a>
+      </article>
+      <article class="card svc reveal">
+        <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M7 8h9a3 3 0 0 1 3 3v18a3 3 0 0 0-3-3H7V8ZM29 8h-9a3 3 0 0 0-3 3"/><path d="M29 8v18h-9a3 3 0 0 0-3 3"/></svg>
+        <h3>Workshops &amp; community</h3>
+        <ul><li>Art therapy</li><li>Reading circles</li><li>Festival events</li><li>School and NGO programs</li></ul>
+        <a class="btn btn--ghost" href="#contact">Book a free 15-min call</a>
+      </article>
+    </div>
+    <div class="next"><p>Wondering what happens next?</p><a href="#how">See how it works</a></div>
+  </div>
+</section>
+
+<section class="sec sec--tint" id="how" aria-labelledby="how-title">
+  <div class="wrap">
+    <p class="eyebrow">How it works</p>
+    <h2 id="how-title">Four unhurried steps.</h2>
+    <ol class="how">
+      <li><strong>Free 15-min call</strong><span class="muted">A chance to say hello and ask anything.</span></li>
+      <li><strong>Choose a service</strong><span class="muted">Together we find what fits.</span></li>
+      <li><strong>Pick a time</strong><span class="muted">Online or in person.</span></li>
+      <li><strong>Ongoing support</strong><span class="muted">At a pace that suits you.</span></li>
+    </ol>
+    <div class="next"><p>This is an invitation, not a commitment.</p><a class="btn" href="#contact">Book a free 15-min call</a></div>
+  </div>
+</section>
+
+<section class="sec" id="fees" aria-labelledby="fees-title">
+  <div class="wrap">
+    <p class="eyebrow">Fees</p>
+    <h2 id="fees-title">Clear, simple fees.</h2>
+    <div class="grid" style="margin-top:32px;max-width:760px">
+      <div class="card fee"><h3>Online</h3><div class="placeholder">Fee to be added</div></div>
+      <div class="card fee"><h3>In person</h3><div class="placeholder">Fee to be added</div></div>
+    </div>
+    <p class="muted" style="margin-top:24px">Packages and sliding-scale options to be confirmed.</p>
+    <div class="next"><p>Questions about cost? Ask on your free call.</p><a href="#faq">Read common questions</a></div>
+  </div>
+</section>
+
+<section class="sec sec--tint" id="faq" aria-labelledby="faq-title">
+  <div class="wrap">
+    <p class="eyebrow">Questions</p>
+    <h2 id="faq-title">Things people often wonder.</h2>
+    <div class="faq">
+      <details><summary>Is it confidential?</summary><p>Yes. What you share stays between us, except where safety law requires otherwise. I'll explain this in your first session.</p></details>
+      <details><summary>Online or in person?</summary><p>Both. Choose whichever feels easier for you.</p></details>
+      <details><summary>How many sessions will I need?</summary><p>It varies. We review together every few sessions.</p></details>
+      <details><summary>What if I don't have a 'disorder'?</summary><p>You don't need one. Many people come for stress, decisions, relationships or growth.</p></details>
+      <details><summary>What does it cost?</summary><p>See <a href="#fees">fees</a>.</p></details>
+      <details><summary>Are the tools here therapy?</summary><p>No. They're self-care practices. Therapy is a relationship with a trained professional.</p></details>
+    </div>
+    <div class="next"><p>Still have a question? Just ask.</p><a href="#contact">Get in touch</a></div>
+  </div>
+</section>
+
+<section class="sec" id="contact" aria-labelledby="contact-title">
+  <div class="wrap">
+    <p class="eyebrow">Contact</p>
+    <h2 id="contact-title">Whenever you're ready.</h2>
+    <p class="lead">Sessions online &amp; in person.</p>
+    <div class="contact-grid">
+      <div class="placeholder"><strong>Booking link</strong>To be added</div>
+      <div class="placeholder"><strong>WhatsApp</strong>To be added</div>
+      <div class="placeholder"><strong>Email</strong>To be added</div>
+      <div class="placeholder"><strong>Instagram</strong>To be added</div>
+      <div class="placeholder"><strong>LinkedIn</strong>To be added</div>
+      <div class="placeholder"><strong>YouTube</strong>To be added</div>
+    </div>
+    <a class="btn" href="#contact">Book a free 15-min call</a>
+    <div class="next"><p>Not ready yet? That's okay.</p><a href="#rituals">Try a small ritual first</a></div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="brand">Therapeutically Yours by Megha Gupta</p>
+    <p>Your privacy: tools run on your device; nothing you type is sent anywhere.</p>
+    <p>Tele-MANAS <a href="tel:14416">14416</a> · <a href="tel:18008914416">1-800-891-4416</a> · Emergency <a href="tel:112">112</a></p>
+    <p>Support here is not a substitute for emergency care.</p>
+    <hr />
+    <p class="small">© 2026 Therapeutically Yours · <a href="#top">Back to the top</a></p>
+  </div>
+</footer>
+
+<script>
 (function () {
-  "use strict";
-  var doc = document, root = doc.documentElement;
-  root.classList.add("js");
-  var LOGO = '<svg width="SIZE" height="SIZE" viewBox="0 0 36 36" fill="none" aria-hidden="true"><path fill="currentColor" d="M25.096 30c-.072 0-.12-.048-.168-.12-4.776-6.384-12.216-10.8-20.736-11.688C4.048 18.168 4 18.096 4 18s.048-.168.192-.192c8.52-.888 15.96-5.304 20.736-11.688.048-.072.096-.12.168-.12s.096.024.168.072A15.02 15.02 0 0 1 31.12 18a15.02 15.02 0 0 1-5.856 11.928c-.072.048-.096.072-.168.072"/></svg>';
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  function esc(s) {
-    return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
-    });
+  /* urgent help panel */
+  var panel = document.getElementById("urgent"), lastFocus = null;
+  function openUrgent() {
+    lastFocus = document.activeElement;
+    panel.hidden = false; panel.classList.add("open");
+    panel.querySelector("[data-urgent-close]").focus();
   }
-  function each(a, f) { return (a || []).map(f).join(""); }
-  function pad2(n) { return (n < 10 ? "0" : "") + n; }
-
-  function niceBounds(vals) {
-    var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
-    var step = Math.pow(10, Math.floor(Math.log10(Math.max(hi - lo, 1e-9))));
-    lo = Math.floor(lo / step) * step; hi = Math.ceil(hi / step) * step;
-    return hi === lo ? [lo - step, hi + step] : [lo, hi];
+  function closeUrgent() {
+    panel.classList.remove("open"); panel.hidden = true;
+    if (lastFocus) lastFocus.focus();
   }
-  function fmtNum(v) { return Number(v).toLocaleString("en-US", { maximumFractionDigits: 2 }); }
-  function chartSVG(pts, opt, W) {
-    W = Math.max(320, Math.round(W || 960));
-    var L = 40, R = W - 40, T = 30, Bt = 210;
-    var stagger = pts.length > 1 && (R - L) / (pts.length - 1) < 96;
-    var nameY = function (i) { return 236 + (stagger && i % 2 ? 16 : 0); };
-    var valueY = function (i, py) { return stagger && i % 2 ? Math.min(py + 22, Bt - 4) : py - 13; };
-    var H = (opt.numbered ? 268 : 248) + (stagger ? 16 : 0);
-    var bounds = niceBounds(pts.length ? pts.map(function (p) { return +p[1]; }) : [0, 1]), lo = bounds[0], hi = bounds[1];
-    var x = function (i) { return L + (R - L) * (pts.length < 2 ? 0.5 : i / (pts.length - 1)); };
-    var y = function (v) { return Bt - (Bt - T) * (v - lo) / (hi - lo || 1); };
-    var unit = opt.unit ? " " + opt.unit : "";
-    var line = pts.map(function (p, i) { return (i ? "L" : "M") + x(i).toFixed(1) + "," + y(p[1]).toFixed(1); }).join(" ");
-    var svg = '<g class="pf-grid">' + [30, 120, 210].map(function (gy) { return '<line x1="' + L + '" y1="' + gy + '" x2="' + R + '" y2="' + gy + '"></line>'; }).join("") + "</g>" +
-      '<text class="pf-axis" x="0" y="34">' + fmtNum(hi) + '</text><text class="pf-axis" x="0" y="124">' + fmtNum((lo + hi) / 2) + '</text><text class="pf-axis" x="0" y="214">' + fmtNum(lo) + "</text>" +
-      '<path class="pf-fill" d="' + line + " L" + R + "," + Bt + " L" + L + "," + Bt + ' Z"></path><path class="pf-line" d="' + line + '"></path>';
-    pts.forEach(function (p, i) {
-      var anchor = i === 0 ? ' text-anchor="start"' : i === pts.length - 1 ? ' text-anchor="end"' : "";
-      svg += '<circle class="pf-dot" cx="' + x(i) + '" cy="' + y(p[1]) + '" r="4.5"></circle>' +
-        '<text class="pf-alt" x="' + x(i) + '" y="' + valueY(i, y(p[1])) + '"' + anchor + ">" + esc(fmtNum(p[1]) + unit) + "</text>" +
-        '<text class="pf-name" x="' + x(i) + '" y="' + nameY(i) + '"' + anchor + ">" + esc(p[0]) + "</text>";
-      if (i && opt.numbered) svg += '<text class="pf-num" x="' + ((x(i - 1) + x(i)) / 2) + '" y="' + (H - 10) + '">' + pad2(i) + "</text>";
-    });
-    return ((opt.caption ? '<p class="chart__cap">' + esc(opt.caption) + "</p>" : "") +
-      '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + esc(opt.label || opt.caption || "Line chart") + '">' + svg + "</svg>");
-  }
-
-  function contentWidth(el) {
-    var cs = getComputedStyle(el);
-    return el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-  }
-  function drawCharts() {
-    [].slice.call(doc.querySelectorAll(".chart[data-points]")).forEach(function (p) {
-      var pts = p.getAttribute("data-points").split(",").map(function (x) { var m = x.split(":"); return [m[0].trim(), +m[1]]; });
-      p.innerHTML = chartSVG(pts, { caption: p.getAttribute("data-caption"), unit: p.getAttribute("data-unit"),
-        label: p.getAttribute("aria-label"), numbered: p.hasAttribute("data-numbered") }, contentWidth(p));
-    });
-  }
-  function autoNav() {
-    var sections = [].slice.call(doc.querySelectorAll("section[data-nav]"));
-    var header = doc.querySelector("header.nav[data-auto]");
-    if (header) {
-      header.innerHTML = '<nav class="seg" aria-label="Sections">' +
-        each(sections, function (s) { return '<a href="#' + esc(s.id) + '">' + esc(s.getAttribute("data-nav")) + "</a>"; }) + "</nav>" +
-        '<button class="theme-btn" id="theme-btn" type="button" aria-label="Switch to dark theme"></button>';
+  document.querySelectorAll("[data-urgent]").forEach(function (b) { b.addEventListener("click", openUrgent); });
+  panel.querySelector("[data-urgent-close]").addEventListener("click", closeUrgent);
+  panel.addEventListener("click", function (e) { if (e.target === panel) closeUrgent(); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !panel.hidden) closeUrgent();
+    if (e.key === "Tab" && !panel.hidden) {
+      var f = panel.querySelectorAll("a,button"), first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     }
-    [].slice.call(doc.querySelectorAll(".foot nav[data-auto]")).forEach(function (n) {
-      n.innerHTML = '<a href="#top">Top</a>' + each(sections, function (s) { return '<a href="#' + esc(s.id) + '">' + esc(s.getAttribute("data-nav")) + "</a>"; });
-    });
-    drawCharts();
-    window.addEventListener("resize", function () { clearTimeout(drawCharts.t); drawCharts.t = setTimeout(drawCharts, 150); }, { passive: true });
-    [].slice.call(doc.querySelectorAll(".table-wrap table")).forEach(function (t) {
-      var names = [].map.call(t.querySelectorAll("thead th"), function (th) { return th.textContent.trim(); });
-      [].slice.call(t.querySelectorAll("tbody tr")).forEach(function (tr) {
-        [].slice.call(tr.children).forEach(function (c, i) {
-          if (c.tagName !== "TD") return;
-          if (!c.textContent.trim() && !c.querySelector("img, svg")) c.classList.add("is-empty");
-          else if (names[i] && !c.hasAttribute("data-label")) c.setAttribute("data-label", names[i]);
-        });
-      });
-    });
-    [].slice.call(doc.querySelectorAll(".compare table")).forEach(function (t) {
-      t.parentNode.style.setProperty("--compare-cols", t.querySelectorAll("thead th").length);
-      [].slice.call(t.querySelectorAll(".compare__media .chip")).forEach(function (chip) {
-        chip.closest("th").appendChild(chip);
-      });
-      [].slice.call(t.querySelectorAll("tbody tr")).forEach(function (tr) {
-        var head = tr.querySelector("th"), label = head ? head.textContent.trim() : "";
-        [].slice.call(tr.querySelectorAll("td")).forEach(function (td) {
-          if (label && !td.hasAttribute("data-label")) td.setAttribute("data-label", label);
-        });
-      });
-    });
-    [].slice.call(doc.querySelectorAll(".step__figure img, .band img")).forEach(function (im) {
-      var mark = function () { if (im.naturalHeight > im.naturalWidth) im.parentNode.classList.add("is-portrait"); };
-      if (im.complete) mark(); else im.addEventListener("load", mark);
-    });
-    [].slice.call(doc.querySelectorAll(".hark-mark:empty")).forEach(function (m) { m.innerHTML = LOGO.replace(/SIZE/g, m.getAttribute("data-size") || "20"); });
+  });
+
+  /* mobile nav */
+  var toggle = document.querySelector(".nav-toggle"), nav = document.getElementById("nav");
+  toggle.addEventListener("click", function () {
+    var open = nav.classList.toggle("open");
+    toggle.setAttribute("aria-expanded", open);
+  });
+  nav.addEventListener("click", function (e) {
+    if (e.target.tagName === "A") { nav.classList.remove("open"); toggle.setAttribute("aria-expanded", "false"); }
+  });
+
+  /* testimonial carousel */
+  var quotes = document.querySelectorAll("#quotes .quote"), qBtn = document.getElementById("quote-toggle");
+  var qi = 0, paused = reduce, timer = null;
+  function show(i) { quotes.forEach(function (q, n) { q.classList.toggle("on", n === i); q.setAttribute("aria-hidden", n !== i); }); }
+  function start() { stop(); timer = setInterval(function () { qi = (qi + 1) % quotes.length; show(qi); }, 9000); }
+  function stop() { if (timer) clearInterval(timer); timer = null; }
+  function sync() { qBtn.textContent = paused ? "Play" : "Pause"; qBtn.setAttribute("aria-pressed", paused); paused ? stop() : start(); }
+  qBtn.addEventListener("click", function () { paused = !paused; sync(); });
+  show(0); sync();
+
+  /* still: name the feelings */
+  window.saveToNote = function (type, text) {
+    var item = { type: type, text: text, date: new Date().toISOString() };
+    try { var a = JSON.parse(localStorage.getItem("ty-note") || "[]"); a.push(item); localStorage.setItem("ty-note", JSON.stringify(a)); }
+    catch (e) { (window.__tyNote = window.__tyNote || []).push(item); }
+  };
+  var sp = document.getElementById("x-panel"), pool = sp.querySelector(".x-pool"), named = [], ritual = "ground", pc = 0;
+  var R = { sigh: "Physiological sigh", ground: "5-4-3-2-1 grounding", tipp: "TIPP", leaves: "Leaves on a stream", compassion: "Self-compassion break", tiny: "One tiny step", good: "Three good things" };
+  var M = { anxious: "sigh", scared: "sigh", restless: "sigh", overwhelmed: "sigh", angry: "tipp", hurt: "tipp", sad: "compassion", lonely: "compassion", empty: "compassion", hopeless: "compassion", numb: "compassion", guilty: "compassion", ashamed: "compassion", stuck: "leaves", confused: "leaves", lost: "leaves", tired: "tiny", hopeful: "good" };
+  function pebble(word) {
+    var b = document.createElement("button"), i = pc++;
+    b.type = "button"; b.className = "pebble"; b.textContent = word; b.dataset.c = i % 3;
+    b.style.left = (4 + Math.random() * 66) + "%"; b.style.top = (5 + Math.random() * 58) + "%";
+    b.style.setProperty("--d", (8 + (i * 5 % 7)) + "s"); b.style.animationDelay = (-i * 1.3) + "s";
+    b.addEventListener("click", function () {
+      b.classList.add("is-named"); b.setAttribute("aria-disabled", "true");
+      named.push(word); ritual = M[word] || "ground";
+      sp.style.setProperty("--stir", Math.max(.15, 1 - named.length * .12));
+      document.getElementById("x-list").textContent = named.join(", ");
+      document.getElementById("x-ritual").textContent = R[ritual];
+      document.getElementById("x-result").hidden = false;
+      var s = document.getElementById("x-save"); s.textContent = "Save to my note for Megha"; s.disabled = false;
+      setTimeout(function () {
+        var f = document.activeElement === b; b.hidden = true;
+        if (f) { var n = sp.querySelector(".pebble:not([hidden])"); (n || document.getElementById("x-new")).focus(); }
+      }, 2000);
+    }, { once: true });
+    sp.insertBefore(b, pool);
   }
+  "tired anxious angry lost numb scared lonely overwhelmed ashamed sad restless hopeless guilty confused hurt empty stuck hopeful".split(" ").forEach(pebble);
+  document.getElementById("x-add").addEventListener("submit", function (e) {
+    e.preventDefault(); var inp = document.getElementById("x-new"), v = inp.value.trim().toLowerCase();
+    if (v) { pebble(v); inp.value = ""; }
+  });
+  document.getElementById("x-try").addEventListener("click", function () {
+    window.dispatchEvent(new CustomEvent("open-ritual", { detail: ritual }));
+    document.getElementById("rituals").scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
+  });
+  document.getElementById("x-save").addEventListener("click", function () {
+    window.saveToNote("feelings", named.join(", ")); this.textContent = "Saved on this device"; this.disabled = true;
+  });
 
-  function behaviors() {
-    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var btn = doc.getElementById("theme-btn"), mq = window.matchMedia("(prefers-color-scheme: dark)");
-    try { var saved = localStorage.getItem("hark-theme"); if (saved === "light" || saved === "dark") root.setAttribute("data-theme", saved); } catch (e) { /* storage blocked: follow the system theme */ }
-    function current() { var t = root.getAttribute("data-theme"); return t === "light" || t === "dark" ? t : (mq.matches ? "dark" : "light"); }
-    function label() { if (btn) btn.setAttribute("aria-label", current() === "dark" ? "Switch to light theme" : "Switch to dark theme"); }
-    if (btn) btn.addEventListener("click", function () {
-      var next = current() === "dark" ? "light" : "dark";
-      root.setAttribute("data-theme", next);
-      try { localStorage.setItem("hark-theme", next); } catch (e) { /* storage blocked: the choice lasts this visit */ }
-      label();
-    });
-    label();
-
-    var seg = doc.querySelector(".seg");
-    if (seg) {
-      var links = [].slice.call(seg.querySelectorAll("a"));
-      var targets = links.map(function (a) { return doc.getElementById(a.getAttribute("href").slice(1)); });
-      var active = -2;
-      var reveal = function (i) {
-        if (i < 0) return;
-        var a = links[i];
-        var l = a.offsetLeft - 8, r = a.offsetLeft + a.offsetWidth + 8;
-        if (l < seg.scrollLeft || r > seg.scrollLeft + seg.clientWidth) seg.scrollTo({ left: l, behavior: reduce ? "auto" : "smooth" });
-      };
-      var sync = function (force) {
-        var line = window.innerHeight * 0.32, cur = -1;
-        targets.forEach(function (t, i) { if (t && t.getBoundingClientRect().top <= line) cur = i; });
-        if (cur === active && !force) return;
-        active = cur;
-        links.forEach(function (a, i) { if (i === cur) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
-        reveal(cur);
-      };
-      var ticking = false;
-      window.addEventListener("scroll", function () {
-        if (ticking) return; ticking = true;
-        window.requestAnimationFrame(function () { sync(false); ticking = false; });
-      }, { passive: true });
-      window.addEventListener("resize", function () { sync(true); }, { passive: true });
-      if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(function () { sync(true); });
-      sync(true);
-    }
-
-    [].slice.call(doc.querySelectorAll(".chart")).forEach(function (chart) {
-      if (reduce || !("IntersectionObserver" in window)) { chart.classList.add("is-in"); return; }
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) { if (e.isIntersecting) { chart.classList.add("is-in"); io.disconnect(); } });
-      }, { threshold: 0.3 });
-      io.observe(chart);
-    });
+  /* gentle reveal */
+  var els = document.querySelectorAll(".reveal");
+  if (reduce || !("IntersectionObserver" in window)) { els.forEach(function (el) { el.classList.add("in"); }); }
+  else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+    }, { threshold: 0.12 });
+    els.forEach(function (el) { io.observe(el); });
   }
-
-  function start() {
-    autoNav();
-    behaviors();
-  }
-  if (doc.readyState === "loading") doc.addEventListener("DOMContentLoaded", start);
-  else start();
 })();
 </script>
-    <script>
-      (function () {
-        var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        var $ = function (id) { return document.getElementById(id); };
+<script>
+/* rituals: data + modal engine */
+(function () {
+  var IN46 = [["Breathe in", 4, 1.5], ["Breathe out", 6, 1]];
+  var RITUALS = window.RITUALS = {
+    sigh: { title: "Physiological sigh", why: "A longer exhale helps your nervous system slow down. A 2023 Stanford study found five minutes a day of cyclic sighing improved mood and eased anxiety.", steps: [
+      { kind: "text", text: "Sit comfortably. You'll breathe in twice through your nose, then out slowly through your mouth. Five rounds." },
+      { kind: "breath", text: "Follow the circle.", cycles: 5, pattern: [["Breathe in", 2, 1.35], ["a little more", 1, 1.6], ["let it all go", 6, 1]] }] },
+    ground: { title: "5-4-3-2-1 grounding", why: "Bringing your senses online pulls attention back to the present when the mind races.", steps: [
+      { kind: "input", text: "Name 5 things you can see." }, { kind: "input", text: "Name 4 things you can touch." },
+      { kind: "input", text: "Name 3 things you can hear." }, { kind: "input", text: "Name 2 things you can smell." },
+      { kind: "input", text: "Name 1 thing you can taste." }] },
+    butterfly: { title: "Butterfly hug", caution: "If difficult memories come up, stop and return to your breath.", why: "A slow, alternating rhythm is something many people find settling; it's borrowed from EMDR therapy.", steps: [
+      { kind: "text", text: "Cross your arms over your chest and rest each hand on the opposite shoulder." },
+      { kind: "pulse", text: "Tap along slowly, left then right, with the dot.", sec: 60 },
+      { kind: "breath", text: "Let your hands rest. A slow breath to close.", cycles: 2, pattern: IN46 }] },
+    tipp: { title: "TIPP for overwhelm", caution: "Skip cold water if you have a heart condition.", why: "From DBT: changing body chemistry fast can bring overwhelming emotion down to a level where you can think.", steps: [
+      { kind: "timer:30", text: "Temperature: splash cool water on your face, or hold something cold to your cheeks." },
+      { kind: "timer:60", text: "Intense movement: walk briskly or march on the spot." },
+      { kind: "breath", text: "Paced breathing: in for 4, out for 6.", cycles: 5, pattern: IN46 },
+      { kind: "timer:20", text: "Paired muscle relaxation: tense both fists for 5 seconds, then release. Repeat." }] },
+    leaves: { title: "Leaves on a stream", dark: true, why: "From ACT: watching thoughts float by, rather than arguing with them, loosens their grip (cognitive defusion).", steps: [
+      { kind: "text", text: "Imagine sitting beside a gentle stream. Leaves float past on the water." },
+      { kind: "leaves", text: "Place a thought on a leaf and watch it drift away. Repeat as often as you like, then press Next." }] },
+    reframe: { title: "Gentle thought reframe", why: "From CBT: thoughts feel like facts when we're hurting. Writing them down and looking again often reveals a gentler, more accurate view.", steps: [
+      { kind: "input", text: "What happened?" },
+      { kind: "input", text: "What is your mind telling you about it?" },
+      { kind: "input", text: "If a kind friend saw this, what would they say?" },
+      { kind: "review", text: "A kinder, truer view" }] },
+    compassion: { title: "Self-compassion break", why: "Kristin Neff's research shows that speaking to yourself as you would to a friend lowers self-criticism and builds resilience.", steps: [
+      { kind: "heart", text: "Place a hand on your heart, if that feels okay." },
+      { kind: "heart", text: "This is a moment of suffering." },
+      { kind: "heart", text: "Suffering is part of being human. I'm not alone in this." },
+      { kind: "heart", text: "May I be kind to myself in this moment." },
+      { kind: "breath", text: "Three slow breaths, hand still resting there.", cycles: 3, pattern: IN46 }] },
+    worry: { title: "Worry window", why: "Postponing worry to a set time can make it intrude less through the day.", steps: [
+      { kind: "input", text: "Write the worry down." },
+      { kind: "time", text: "When can you come back to it today?" },
+      { kind: "hold", text: function () { return "I'll hold this for you until " + t12(A[1] || "19:00") + "."; } }] },
+    tiny: { title: "One tiny step", why: "From behavioural activation: action often comes before motivation, not after.", steps: [
+      { kind: "choice", text: "Pick one small thing.", options: ["Drink a glass of water", "Open a window", "Step outside for 2 minutes", "Message one person", "Wash your face", "Stretch for a minute"] },
+      { kind: "wait", text: "Go do it. I'll wait." }] },
+    good: { title: "Three good things", why: "Martin Seligman's research found that noting three good things each evening lifted mood over weeks.", steps: [
+      { kind: "input", text: "One small good thing today, and why it happened" },
+      { kind: "input", text: "One small good thing today, and why it happened" },
+      { kind: "input", text: "One small good thing today, and why it happened" },
+      { kind: "summary", text: "Three good things from today" }] }
+  };
+  var A = {};
+  function t12(v) { var p = v.split(":"), h = +p[0]; return (h % 12 || 12) + ":" + p[1] + (h < 12 ? " am" : " pm"); }
+  var $ = function (id) { return document.getElementById(id); };
+  var mo = $("x-modal"), mT = $("x-m-title"), mStep = $("x-m-step"), mText = $("x-m-text"), mTool = $("x-m-tool"), mBack = $("x-m-back"), mNext = $("x-m-next"), mDots = $("x-m-dots"), mWhy = $("x-m-why"), mCau = $("x-m-caution"), stream = mo.querySelector(".x-stream");
+  var cur, curId, si = 0, opener = null, T = [];
+  function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; }
+  function btn(x, c) { var b = el("button", c || "btn btn--ghost", x); b.type = "button"; return b; }
+  function fmt(s) { return Math.floor(s / 60) + ":" + ("0" + s % 60).slice(-2); }
+  function clr() { T.forEach(function (t) { clearTimeout(t); clearInterval(t); }); T = []; }
 
-        // nav menu
-        var menu = document.querySelector(".x-menu"), links = $("x-links");
-        menu.addEventListener("click", function () { var o = links.classList.toggle("is-open"); menu.setAttribute("aria-expanded", o); });
-        links.addEventListener("click", function (e) { if (e.target.closest("a")) { links.classList.remove("is-open"); menu.setAttribute("aria-expanded", "false"); } });
+  function openR(id) {
+    var card = document.querySelector('.x-rit[data-ritual="' + id + '"]');
+    cur = RITUALS[id] || (card && { title: card.querySelector("strong").textContent, soon: true, steps: [{ kind: "text", text: "Coming in the next update." }] });
+    if (!cur) return;
+    if (mo.hidden) opener = document.activeElement;
+    curId = id; si = 0; A = {};
+    mo.classList.toggle("is-dark", !!cur.dark);
+    mT.textContent = cur.title;
+    mWhy.hidden = !cur.why; mWhy.open = false; mWhy.querySelector("p").textContent = cur.why || "";
+    mCau.hidden = !cur.caution; mCau.textContent = cur.caution || "";
+    mo.hidden = false; document.body.style.overflow = "hidden";
+    render(); mT.focus();
+  }
+  function closeR() {
+    clr(); stream.innerHTML = ""; mo.hidden = true; document.body.style.overflow = "";
+    if (opener && opener.focus) opener.focus();
+  }
+  function render() {
+    clr(); stream.innerHTML = ""; mTool.innerHTML = ""; mDots.innerHTML = "";
+    var n = cur.steps.length, fin = !cur.soon && si === n, s = cur.steps[si];
+    mStep.textContent = cur.soon ? "" : fin ? "Last step" : "Step " + (si + 1) + " of " + n;
+    if (!cur.soon) for (var i = 0; i <= n; i++) mDots.appendChild(el("li", i === si ? "on" : i < si ? "done" : ""));
+    mBack.hidden = !!cur.soon; mBack.disabled = si === 0;
+    mNext.hidden = fin; mNext.textContent = cur.soon ? "Close" : "Next";
+    if (fin) { mText.textContent = "How do you feel now?"; feel(); }
+    else {
+      mText.textContent = typeof s.text === "function" ? s.text() : s.text;
+      var k = s.kind.split(":"), f = { breath: breath, timer: timer, input: input, pulse: pulse, leaves: leaves, review: review, heart: heart, time: time, hold: hold, choice: choice, wait: wait, summary: summary }[k[0]];
+      if (f) f(s, +k[1]);
+    }
+    var a = document.activeElement;
+    if (!mo.contains(a) || a.disabled || a.hidden) (fin ? mTool.querySelector("button") : mNext).focus();
+  }
 
-        // reveal on scroll
-        var rev = [].slice.call(document.querySelectorAll(".x-reveal"));
-        if (!("IntersectionObserver" in window)) rev.forEach(function (el) { el.classList.add("is-in"); });
-        else {
-          var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } }); }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
-          rev.forEach(function (el) { io.observe(el); });
-        }
+  function breath(s) {
+    var orb = el("div", "x-orb"), lab = el("p", "x-big", "Get ready"), cnt = el("p", "muted small", ""), c = 0, p = 0;
+    orb.setAttribute("aria-hidden", "true"); mTool.append(orb, lab, cnt);
+    function go() {
+      if (p === s.pattern.length) { p = 0; c++; }
+      if (c === s.cycles) { lab.textContent = "Well done"; cnt.textContent = ""; orb.style.setProperty("--d", "2s"); orb.style.transform = "scale(1)"; return; }
+      var ph = s.pattern[p++];
+      cnt.textContent = "Breath " + (c + 1) + " of " + s.cycles; lab.textContent = ph[0];
+      orb.style.setProperty("--d", ph[1] + "s"); orb.style.transform = "scale(" + ph[2] + ")";
+      T.push(setTimeout(go, ph[1] * 1000));
+    }
+    T.push(setTimeout(go, 1200));
+  }
+  function timer(s, sec) {
+    var left = sec, run = null, big = el("p", "x-big", fmt(sec)), b = btn("Start " + fmt(sec) + " timer");
+    b.onclick = function () {
+      if (run) { clearInterval(run); run = null; b.textContent = "Resume"; return; }
+      if (!left) left = sec;
+      b.textContent = "Pause"; big.textContent = fmt(left);
+      run = setInterval(function () {
+        big.textContent = fmt(--left);
+        if (!left) { clearInterval(run); run = null; big.textContent = "Done"; b.textContent = "Again"; }
+      }, 1000); T.push(run);
+    };
+    mTool.append(big, b);
+  }
+  function input(s) {
+    var i = el("input"); i.type = "text"; i.placeholder = "type, or just notice"; i.autocomplete = "off"; i.setAttribute("aria-label", s.text);
+    var key = si; i.value = A[key] || ""; i.oninput = function () { A[key] = i.value; };
+    i.onkeydown = function (e) { if (e.key === "Enter") { e.preventDefault(); si++; render(); } };
+    mTool.append(i);
+  }
+  function saveBtn(type, text) {
+    var b = btn("Save to my note for Megha", "btn");
+    b.onclick = function () { window.saveToNote(type, text); b.textContent = "Saved on this device"; b.onclick = null; };
+    return b;
+  }
+  function review() {
+    var labels = ["What happened", "What my mind said", "What a kind friend would say"], g = el("div", "x-review"), parts = [];
+    labels.forEach(function (l, n) {
+      var v = (A[n] || "").trim(), d = el("div");
+      d.append(el("p", "eyebrow", l), el("p", null, v || "Left blank, and that's okay."));
+      g.append(d); if (v) parts.push(l + ": " + v);
+    });
+    mTool.append(g);
+    if (parts.length) mTool.append(saveBtn("reframe", parts.join("\n")));
+  }
+  function heart() {
+    var w = el("div"); w.setAttribute("aria-hidden", "true");
+    w.innerHTML = '<svg class="x-heart" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.2 5.3 3.2 1.7-2 3.2-3.2 5.3-3.2 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg>';
+    mTool.append(w);
+  }
+  function time(s) {
+    var key = si, i = el("input"); i.type = "time"; i.setAttribute("aria-label", s.text);
+    i.value = A[key] = A[key] || "19:00";
+    i.oninput = function () { if (i.value) A[key] = i.value; };
+    mTool.append(i);
+  }
+  function hold() {
+    var v = (A[0] || "").trim(), p = (A[1] || "19:00").split(":"), d = new Date();
+    d.setHours(+p[0], +p[1], 0, 0);
+    if (v) { try { localStorage.setItem("ty-worry", JSON.stringify({ text: v, time: d.toISOString() })); } catch (e) {} }
+    mTool.append(el("p", "muted small", "You can put it down for now."));
+  }
+  function choice(s) {
+    var key = si, row = el("div", "x-choice");
+    function pick(v) { A[key] = v; si++; render(); }
+    s.options.forEach(function (o) {
+      var b = btn(o); b.setAttribute("aria-pressed", A[key] === o); b.onclick = function () { pick(o); }; row.append(b);
+    });
+    var f = el("form", "x-own"), i = el("input"), go = el("button", "btn", "Use this");
+    i.type = "text"; i.placeholder = "Or type your own"; i.autocomplete = "off"; i.setAttribute("aria-label", "Type your own tiny step"); go.type = "submit";
+    if (A[key] && s.options.indexOf(A[key]) < 0) i.value = A[key];
+    f.onsubmit = function (e) { e.preventDefault(); var v = i.value.trim(); if (v) pick(v); };
+    f.append(i, go); mTool.append(row, f);
+  }
+  function wait() {
+    var big = el("p", "x-big", A[0] || "Your tiny step"), out = el("div", "x-out"), b = btn("Done", "btn");
+    out.setAttribute("aria-live", "polite");
+    b.onclick = function () {
+      b.remove();
+      var w = el("div"), svg = '<svg class="x-bloom" viewBox="0 0 170 170" aria-hidden="true">';
+      for (var n = 0; n < 8; n++) svg += '<g transform="rotate(' + n * 45 + ' 85 85)"><ellipse class="p" cx="85" cy="50" rx="16" ry="34" fill="var(--deco)" fill-opacity=".55" style="animation-delay:' + (n * .18).toFixed(2) + 's"/></g>';
+      svg += '<circle class="p" cx="85" cy="85" r="15" fill="var(--sand)" style="animation-delay:1.5s"/></svg>';
+      w.innerHTML = svg; out.append(w, el("p", null, "Done. That counts."));
+    };
+    mTool.append(big, b, out);
+  }
+  function summary() {
+    var items = [0, 1, 2].map(function (n) { return (A[n] || "").trim(); }).filter(Boolean);
+    if (!items.length) { mTool.append(el("p", "muted", "Nothing written this time. Noticing still counts.")); return; }
+    var ol = el("ol", "x-list"); items.forEach(function (t) { ol.append(el("li", null, t)); });
+    mTool.append(ol, saveBtn("good things", items.join("\n")));
+  }
+  function pulse(s) {
+    var w = el("div", "x-pulse"), a = el("i", "on"), b = el("i"), left = s.sec, cnt = el("p", "muted small", fmt(left)), on = false;
+    w.setAttribute("aria-hidden", "true"); w.append(a, b); mTool.append(w, cnt);
+    T.push(setInterval(function () { on = !on; a.className = on ? "" : "on"; b.className = on ? "on" : ""; }, 1200));
+    T.push(setInterval(function () { cnt.textContent = --left > 0 ? fmt(left) : "Done"; if (left <= 0) clr(); }, 1000));
+  }
+  function leaves() {
+    var f = el("form", "x-add"), i = el("input"), b = el("button", "btn", "Place it on a leaf");
+    i.type = "text"; i.placeholder = "A thought…"; i.maxLength = 60; i.autocomplete = "off"; i.setAttribute("aria-label", "Place a thought on a leaf"); b.type = "submit";
+    f.append(i, b); mTool.append(f);
+    f.onsubmit = function (e) {
+      e.preventDefault(); var v = i.value.trim(); if (!v) return; i.value = "";
+      var l = el("span", "x-leaf", v); l.style.top = (10 + Math.random() * 65) + "%"; stream.append(l);
+      setTimeout(function () { l.remove(); }, 12500);
+    };
+  }
+  function feel() {
+    var row = el("div", "x-feel"), out = el("div", "x-out");
+    out.setAttribute("aria-live", "polite");
+    [["Lighter", function () {
+      out.append(el("p", null, "Keep this one close."));
+      var b = btn("Save to my note for Megha", "btn");
+      b.onclick = function () { window.saveToNote("helped", cur.title); b.textContent = "Saved on this device"; b.onclick = null; };
+      out.append(b);
+    }], ["About the same", function () {
+      var ids = Object.keys(RITUALS).filter(function (k) { return k !== curId; }), id = ids[Math.floor(Math.random() * ids.length)];
+      out.append(el("p", null, "Sometimes a different one fits better."));
+      var b = btn("Try " + RITUALS[id].title, "btn"); b.onclick = function () { openR(id); }; out.append(b);
+    }], ["Heavier", function () {
+      out.append(el("p", null, "Thank you for staying with it. You don't have to do this alone."));
+      var a = el("a", "btn", "Talk to Megha"), u = btn("Get urgent help");
+      a.href = "#megha"; a.onclick = closeR;
+      u.onclick = function () { closeR(); document.querySelector("[data-urgent]").click(); };
+      out.append(a, u);
+    }]].forEach(function (o) {
+      var b = btn(o[0]); b.setAttribute("aria-pressed", "false");
+      b.onclick = function () { row.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", x === b); }); out.innerHTML = ""; o[1](); };
+      row.append(b);
+    });
+    mTool.append(row, out);
+  }
 
-        // breathing orb
-        var phases = [["Inhale", 4, 1], ["Hold", 4, 1], ["Exhale", 6, 0.55]];
-        var orb = $("orb"), word = $("orb-word"), secs = $("orb-secs"), obtn = $("orb-btn"), count = $("orb-count");
-        var idx = -1, remain = 0, timer = null, cycles = 0;
-        function enter(i, left) {
-          idx = i; remain = left || phases[i][1];
-          word.textContent = phases[i][0]; secs.textContent = remain;
-          orb.style.transitionDuration = remain + "s";
-          orb.style.transform = "scale(" + phases[i][2] + ")";
-        }
-        function tick() {
-          remain--;
-          if (remain <= 0) { var n = (idx + 1) % 3; if (n === 0) { cycles++; count.textContent = cycles; } enter(n); }
-          else secs.textContent = remain;
-        }
-        obtn.addEventListener("click", function () {
-          if (timer) {
-            clearInterval(timer); timer = null;
-            var t = getComputedStyle(orb).transform; orb.style.transitionDuration = "0s"; orb.style.transform = t;
-            obtn.textContent = "Resume"; word.textContent = "Paused";
-          } else {
-            enter(idx < 0 ? 0 : idx, idx < 0 ? 0 : remain);
-            timer = setInterval(tick, 1000); obtn.textContent = "Pause";
-          }
-        });
-
-        // check-in
-        var feel = $("feel"), fc = $("feel-count"), box = $("checkin"), field = $("checkin-field"), done = $("released");
-        feel.addEventListener("input", function () { fc.textContent = feel.value.length + "/500"; });
-        $("release").addEventListener("click", function () {
-          var txt = feel.value.trim();
-          if (!txt) { done.textContent = "Write a word or two first — whatever is here."; feel.focus(); return; }
-          done.textContent = "";
-          if (!reduce) {
-            var f = document.createElement("div"); f.className = "x-float"; f.textContent = txt; field.appendChild(f);
-            setTimeout(function () { f.remove(); }, 2300);
-            var r = field.getBoundingClientRect(), b = box.getBoundingClientRect();
-            for (var i = 0; i < 36; i++) {
-              var s = document.createElement("span"); s.className = "x-spark";
-              s.style.left = (r.left - b.left + Math.random() * r.width) + "px";
-              s.style.top = (r.top - b.top + 20 + Math.random() * 100) + "px";
-              s.style.setProperty("--dx", (Math.random() * 80 - 40) + "px");
-              s.style.setProperty("--dy", (-80 - Math.random() * 140) + "px");
-              s.style.animationDelay = (0.3 + Math.random() * 0.9) + "s";
-              box.appendChild(s);
-              (function (el) { setTimeout(function () { el.remove(); }, 3300); })(s);
-            }
-          }
-          feel.value = ""; fc.textContent = "0/500";
-          setTimeout(function () { done.textContent = "Released. Take one more slow breath."; }, reduce ? 0 : 1800);
-        });
-
-        // situations
-        [].slice.call(document.querySelectorAll(".x-sit")).forEach(function (card) {
-          var b = card.querySelector("button"), more = card.querySelector(".x-sit-more");
-          b.addEventListener("click", function () { var o = more.hidden; more.hidden = !o; card.classList.toggle("is-open", o); b.setAttribute("aria-expanded", o); });
-        });
-
-        // modal tools
-        var modal = $("tool-modal"), raf = null;
-        var path = $("track-path"), dot = $("focus-dot"), track = $("track");
-        var pts = []; for (var k = 0; k <= 120; k++) { var a = (k / 120) * Math.PI * 2; pts.push((100 + 85 * Math.cos(a)).toFixed(1) + "," + (50 + 38 * Math.sin(2 * a)).toFixed(1)); }
-        path.setAttribute("points", pts.join(" "));
-        function glide(t0) {
-          function step(now) {
-            var a = ((now - t0) / 12000) * Math.PI * 2, w = track.clientWidth, h = track.clientHeight;
-            dot.style.transform = "translate(" + (w * (100 + 85 * Math.cos(a)) / 200) + "px," + (h * (50 + 38 * Math.sin(2 * a)) / 100) + "px)";
-            raf = requestAnimationFrame(step);
-          }
-          raf = requestAnimationFrame(step);
-        }
-        var g = [[5, "things you can see"], [4, "things you can touch"], [3, "things you can hear"], [2, "things you can smell"], [1, "thing you can taste"]], gi = 0;
-        var gdots = [].slice.call($("g-dots").children);
-        function gshow() {
-          if (gi >= g.length) { $("g-num").textContent = "✦"; $("g-text").textContent = "You're here, in this moment. Well done."; $("g-next").textContent = "Start again"; gdots.forEach(function (d) { d.classList.add("is-on"); }); return; }
-          $("g-num").textContent = g[gi][0]; $("g-text").textContent = g[gi][1];
-          $("g-next").textContent = gi === g.length - 1 ? "Finish" : "Next"; $("g-back").disabled = gi === 0;
-          gdots.forEach(function (d, i) { d.classList.toggle("is-on", i <= gi); });
-        }
-        $("g-next").addEventListener("click", function () { gi = gi >= g.length ? 0 : gi + 1; gshow(); });
-        $("g-back").addEventListener("click", function () { if (gi > 0) { gi = Math.min(gi, g.length) - 1; gshow(); } });
-        var emo = {
-          anxious: "Lengthen your exhale — in for 4, out for 6. Your body learns it is safe.",
-          sad: "Let it be here. Sadness often means something mattered to you.",
-          angry: "Anger points to a boundary. Notice where you feel it, and soften your jaw.",
-          overwhelmed: "Choose just one small thing. Everything else can wait five minutes.",
-          lonely: "Reach out to one person today — even a simple hello counts.",
-          numb: "Numbness can be protection. Hold something warm or cold and notice it.",
-          hopeful: "Hold on to this. Write down one thing that sparked it.",
-          calm: "Savour it. Notice where calm lives in your body, so you can return."
-        };
-        var emos = $("emos");
-        Object.keys(emo).forEach(function (k) {
-          var b = document.createElement("button"); b.type = "button"; b.textContent = k; b.setAttribute("aria-pressed", "false");
-          b.addEventListener("click", function () { [].forEach.call(emos.children, function (c) { c.setAttribute("aria-pressed", "false"); }); b.setAttribute("aria-pressed", "true"); $("guide").textContent = emo[k]; });
-          emos.appendChild(b);
-        });
-        [].slice.call(document.querySelectorAll("[data-tool]")).forEach(function (btn) {
-          btn.addEventListener("click", function () {
-            var tool = btn.getAttribute("data-tool");
-            [].forEach.call(modal.querySelectorAll("[data-panel]"), function (p) { p.hidden = p.getAttribute("data-panel") !== tool; });
-            modal.setAttribute("aria-labelledby", "modal-title-" + tool);
-            if (tool === "ground") { gi = 0; gshow(); }
-            modal.showModal();
-            if (tool === "focus") glide(performance.now());
-          });
-        });
-        function stop() { if (raf) cancelAnimationFrame(raf); raf = null; }
-        modal.addEventListener("close", stop);
-        modal.querySelector("[data-close]").addEventListener("click", function () { modal.close(); });
-        modal.addEventListener("click", function (e) { if (e.target !== modal) return; var r = modal.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) modal.close(); });
-      })();
-    </script>
-  
-
-</body></html>
+  mNext.onclick = function () { if (cur.soon) closeR(); else { si++; render(); } };
+  mBack.onclick = function () { if (si > 0) { si--; render(); } };
+  mo.querySelector(".x-m-close").onclick = closeR;
+  document.addEventListener("keydown", function (e) {
+    if (mo.hidden) return;
+    if (e.key === "Escape") { closeR(); return; }
+    if (e.key !== "Tab") return;
+    var f = [].filter.call(mo.querySelectorAll("a[href],button,input,summary"), function (x) { return !x.disabled && x.getClientRects().length; }), first = f[0], last = f[f.length - 1], a = document.activeElement;
+    if (!mo.contains(a)) { e.preventDefault(); first.focus(); }
+    else if (e.shiftKey && a === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
+  });
+  document.querySelectorAll("[data-ritual]").forEach(function (c) {
+    c.addEventListener("click", function (e) { e.preventDefault(); openR(c.dataset.ritual); });
+  });
+  window.addEventListener("open-ritual", function (e) { openR(e.detail); });
+  (function () {
+    var w; try { w = JSON.parse(localStorage.getItem("ty-worry")); } catch (e) { return; }
+    if (!w || !w.text || !(new Date(w.time) <= new Date())) return;
+    var c = el("div", "card x-worry"), row = el("div", "x-choice"), lighter = btn("Lighter now", "btn"), heavy = btn("Still heavy");
+    c.setAttribute("role", "status");
+    c.append(el("p", null, "Earlier you set this aside: \u2018" + w.text + "\u2019. Is it still as heavy?"), row);
+    lighter.onclick = function () { try { localStorage.removeItem("ty-worry"); } catch (e) {} c.remove(); };
+    heavy.onclick = function () { c.remove(); openR("reframe"); };
+    row.append(lighter, heavy);
+    var wrap = document.querySelector("#rituals .wrap"); wrap.insertBefore(c, wrap.firstChild);
+  })();
+})();
+</script>
+</body>
+</html>
